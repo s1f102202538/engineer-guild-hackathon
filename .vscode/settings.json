@@ -1,6 +1,8 @@
 {
   "files.eol": "\n",
 
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
 
