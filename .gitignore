@@ -130,3 +130,10 @@ dist
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
