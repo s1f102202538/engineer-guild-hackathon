@@ -1,5 +1,5 @@
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import react from "eslint-plugin-react";
+import node from "eslint-plugin-node";
 import globals from "globals";
 import tsParser from "@typescript-eslint/parser";
 import path from "node:path";
@@ -17,20 +17,18 @@ const compat = new FlatCompat({
 
 export default [...compat.extends(
     "eslint:recommended",
-    "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "next/typescript",
+    "plugin:@typescript-eslint/strict",
+    "plugin:node/recommended",
     "eslint-config-prettier",
 ), {
     plugins: {
         "@typescript-eslint": typescriptEslint,
-        react,
+        node,
     },
 
     languageOptions: {
         globals: {
-            ...globals.browser,
             ...globals.node,
         },
 
@@ -40,21 +38,15 @@ export default [...compat.extends(
 
         parserOptions: {
             project: "./tsconfig.json",
-
-            ecmaFeatures: {
-                jsx: true,
-            },
         },
     },
 
     rules: {
-        "react/react-in-jsx-scope": "off",
-
-        "react/function-component-definition": [2, {
-            namedComponents: "arrow-function",
-            unnamedComponents: "arrow-function",
+        "node/no-unsupported-features/es-syntax": ["error", {
+            ignores: ["modules"],
         }],
 
-        "react/prop-types": "off",
+        "node/no-missing-import": "off",
+        "node/no-unpublished-import": "off",
     },
 }];
