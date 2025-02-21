@@ -1,0 +1,20 @@
+{
+  "files.eol": "\n",
+
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "css.validate": false,
+
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}
