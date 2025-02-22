@@ -8,6 +8,13 @@ ARG NPM_GLOBAL=/usr/local/share/npm-global
 # Add NPM global to PATH.
 ENV PATH=${NPM_GLOBAL}/bin:${PATH}
 
+# node_modules をマウントするためにフォルダを作成して、permission を変更
+RUN mkdir -p /engineer-guild-hackathon/node_modules \
+    && mkdir -p /engineer-guild-hackathon/packages/client/node_modules \
+    && mkdir -p /engineer-guild-hackathon/packages/server/node_modules \
+    && chown -R ${USERNAME}:${USERNAME} /engineer-guild-hackathon \
+    && chmod -R 775 /engineer-guild-hackathon
+
 RUN \
     # Configure global npm install location, use group to adapt to UID/GID changes
     if ! cat /etc/group | grep -e "^npm:" > /dev/null 2>&1; then groupadd -r npm; fi \
