@@ -36,5 +36,8 @@ export default [...compat.extends(
         },
     },
 
-    rules: {},
+    rules: {
+      "no-process-exit": "error",
+      "no-path-concat": "error",
+    },
 }];
