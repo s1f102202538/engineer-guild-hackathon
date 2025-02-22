@@ -20,10 +20,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: ./.github/actions/common-setup-action
+        uses: ./.github/actions/common-setup/action.yml
 
       - name: Restore yarn cache
-        uses: ./.github/actions/restore-yarn-cache
+        uses: ./.github/actions/restore-yarn-cache/action.yml
         id: restore-yarn-cache
         if: ${{ inputs.use-yarn-cache }} == true
 
