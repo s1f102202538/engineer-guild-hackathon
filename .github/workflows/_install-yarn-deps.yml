@@ -33,7 +33,7 @@ jobs:
         if: ${{ inputs.use-yarn-cache }} == true
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
 
       - name: Get yarn dependencies from cache
