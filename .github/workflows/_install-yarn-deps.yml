@@ -14,18 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      yarn-cache-path: ''
+      CACHE_DIR: ''
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: ./.github/actions/common-setup
-
-      - name: Setup yarn v4
-        run: |
-          corepack enable
-          yarn set version 4.6.0
 
       - name: Restore yarn cache
         uses: ./.github/actions/restore-yarn-cache
