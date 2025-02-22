@@ -3,7 +3,7 @@
   "dockerComposeFile": ["./docker-compose.yml"],
   "service": "engineer-guild-hackathon",
   "workspaceFolder": "/engineer-guild-hackathon",
-  "postStartCommand": "/bin/sh .devcontainer/poseStartCommand.sh",
+  "postStartCommand": "/bin/sh .devcontainer/postStartCommand.sh",
 
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {

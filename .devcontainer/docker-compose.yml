@@ -6,6 +6,9 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ..:/engineer-guild-hackathon:delegated
+      - node_modules:/engineer-guild-hackathon/node_modules
+      - client-node_modules:/engineer-guild-hackathon/client/node_modules
+      - server-node_modules:/engineer-guild-hackathon/server/node_modules
     ports:
       # client
       - 3000:3000
@@ -28,3 +31,6 @@ services:
 
 volumes:
   postgres-data:
+  node_modules:
+  client-node_modules:
+  server-node_modules:
