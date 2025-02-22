@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  next-lint-check:
+  lint-check:
     runs-on: ubuntu-latest
     strategy:
       matrix:
