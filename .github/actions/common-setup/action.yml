@@ -17,6 +17,11 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
 
+    - name: Setup yarn v4
+      run: |
+        corepack enable
+        yarn set version 4.6.0
+
     # - name: Get changed directories
     #   id: get_changed_dirs
     #   shell: bash
