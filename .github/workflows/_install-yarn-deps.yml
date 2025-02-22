@@ -22,11 +22,6 @@ jobs:
       - name: Setup Node.js
         uses: ./.github/actions/common-setup
 
-      - name: Restore yarn cache
-        uses: ./.github/actions/restore-yarn-cache
-        id: restore-yarn-cache
-        if: ${{ inputs.use-yarn-cache }} == true
-
       - name: Enable Corepack
         run: corepack enable
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
@@ -34,6 +29,11 @@ jobs:
       - name: Setup yarn v4
         run: yarn set version stable
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
+
+      - name: Restore yarn cache
+        uses: ./.github/actions/restore-yarn-cache
+        id: restore-yarn-cache
+        if: ${{ inputs.use-yarn-cache }} == true
 
       - name: Install dependencies
         run: yes | yarn install
