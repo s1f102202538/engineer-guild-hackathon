@@ -1,11 +1,11 @@
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import node from "eslint-plugin-node";
 import globals from "globals";
 import tsParser from "@typescript-eslint/parser";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
+import nodePlugin from "eslint-plugin-node";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +24,7 @@ export default [...compat.extends(
 ), {
     plugins: {
         "@typescript-eslint": typescriptEslint,
-        node,
+        node: nodePlugin,
     },
 
     languageOptions: {
