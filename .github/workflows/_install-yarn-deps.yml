@@ -12,7 +12,7 @@ on:
 jobs:
   cache-and-install:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     env:
       yarn-cache-path: ''
     steps:
@@ -27,8 +27,16 @@ jobs:
         id: restore-yarn-cache
         if: ${{ inputs.use-yarn-cache }} == true
 
+      - name: Enable Corepack
+        run: corepack enable
+        if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
+
+      - name: Setup yarn v4
+        run: yarn set version stable
+        if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
+
       - name: Install dependencies
-        run: yarn install
+        run: yes | yarn install
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
 
       - name: Get yarn dependencies from cache

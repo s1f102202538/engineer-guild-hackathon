@@ -1,0 +1,31 @@
+name: ci
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'packages/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: packages
+    timeout-minutes: 20
+
+jobs:
+  install-yarn-deps:
+    uses: ./.github/workflows/_install-yarn-deps.yml
+    with:
+      use-yarn-cache: true
+
+  verify-lint:
+    needs: install-yarn-deps
+    uses: ./.github/workflows/_verify-lint.yml
+    with:
+      working-directory: packages/
