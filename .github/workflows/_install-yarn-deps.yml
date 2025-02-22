@@ -20,32 +20,29 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: ./.github/actions/common-setup-action
+        uses: ./.github/actions/common-setup
+
+      - name: Setup yarn v4
+        run: |
+          corepack enable
+          yarn set version 4.6.0
 
       - name: Restore yarn cache
         uses: ./.github/actions/restore-yarn-cache
         id: restore-yarn-cache
         if: ${{ inputs.use-yarn-cache }} == true
 
-      - name: Enable Corepack
-        run: corepack enable
-        if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
-
-      - name: Setup yarn v4
-        run: yarn set version stable
-        if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
-
       - name: Install dependencies
-        run: yes | yarn install
+        run: yarn install
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
 
       - name: Get yarn dependencies from cache
         run: |
-          echo "yarn-cache-path=$(yarn cache dir)" >> $GITHUB_ENV
+          echo "CACHE_DIR=$(yarn config get cacheFolder)" >> $GITHUB_ENV
 
       - name: Save yarn cache
         uses: actions/cache/save@v4
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
         with:
-          path: ${{ env.yarn-cache-path }}
+          path: ${{ env.CACHE_DIR }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
