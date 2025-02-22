@@ -38,11 +38,11 @@ jobs:
 
       - name: Get yarn dependencies from cache
         run: |
-          echo "YAR_CACHE_DIR=$(yarn config get cacheFolder)" >> $GITHUB_ENV
+          echo "CACHE_DIR=$(yarn config get cacheFolder)" >> $GITHUB_ENV
 
       - name: Save yarn cache
         uses: actions/cache/save@v4
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
         with:
-          path: ${{ env.YAR_CACHE_DIR }}
+          path: ${{ env.CACHE_DIR }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
