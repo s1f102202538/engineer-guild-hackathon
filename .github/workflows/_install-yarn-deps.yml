@@ -34,7 +34,7 @@ jobs:
         if: ${{ inputs.use-yarn-cache }} == true
 
       - name: Install dependencies
-        run: yes | yarn install --frozen-lockfile
+        run: yes | yarn install --immutable
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
 
       - name: Get yarn dependencies from cache
