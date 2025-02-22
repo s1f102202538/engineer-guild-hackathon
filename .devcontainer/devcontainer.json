@@ -27,7 +27,6 @@
         "editorconfig.editorconfig",
         "cweijan.vscode-database-client2",
         "esbenp.prettier-vscode",
-        "stylelint.vscode-stylelint",
         "prisma.prisma",
         "github.copilot"
       ]
