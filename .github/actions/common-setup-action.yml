@@ -1,0 +1,34 @@
+name: common-setup
+description: |
+  Common setup for all actions
+
+inputs:
+  # 環境変数を設定する
+  node-version:
+    description: 'Node.js version'
+    required: false
+    default: '20.18.0'
+  yarn-version:
+    description: 'Yarn version'
+    required: false
+    default: '4.6.0'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        yarn-version: ${{ inputs.yarn-version }}
+        cache: 'yarn'
+
+    # - name: Get changed directories
+    #   id: get_changed_dirs
+    #   shell: bash
+    #   run: |
+    #     # 変更のあったファイルのディレクトリパスを取得
+    #     DIRS=$(git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }} | xargs -I {} dirname {} | sort -u)
+    #     # packages/配下のディレクトリのみをフィルタリング
+    #     PACKAGE_DIRS=$(echo "$DIRS" | grep "^packages/" || true)
+    #     echo "changed-directories=$PACKAGE_DIRS" >> $GITHUB_OUTPUT

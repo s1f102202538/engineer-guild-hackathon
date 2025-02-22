@@ -1,0 +1,37 @@
+name: _verify-lint
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: 'Working directory for ESLint'
+        required: false
+        default: 'packages/'
+
+jobs:
+  verify-lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: ./.github/actions/common-setup-action
+
+      - name: Restore yarn cache
+        uses: ./.github/actions/restore-yarn-cache
+
+      - name: Get changed ts/tsx files
+        id: get_changed_files
+        shell: bash
+        run: |
+          echo "changed-files=$(git diff --name-only ${{ github.base_ref }} ${{ github.head_ref }} | grep '\.ts[x]?$')" >> $GITHUB_OUTPUT
+
+      - name: Run ESLint Reviewdog
+        uses: reviewdog/action-eslint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          eslint_flags: '${{ steps.get_changed_files.outputs.changed-files }}'
+          workdir: ${{ inputs.working-directory }}

@@ -1,0 +1,51 @@
+name: _install-yarn-deps
+
+on:
+  workflow_call:
+    inputs:
+      use-yarn-cache:
+        description: 'Use yarn cache'
+        type: boolean
+        required: false
+        default: true
+
+jobs:
+  cache-and-install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      yarn-cache-path: ''
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: ./.github/actions/common-setup-action
+
+      - name: Restore yarn cache
+        uses: ./.github/actions/restore-yarn-cache
+        id: restore-yarn-cache
+        if: ${{ inputs.use-yarn-cache }} == true
+
+      - name: Enable Corepack
+        run: corepack enable
+        if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
+
+      - name: Setup yarn v4
+        run: yarn set version stable
+        if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
+
+      - name: Install dependencies
+        run: yes | yarn install
+        if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
+
+      - name: Get yarn dependencies from cache
+        run: |
+          echo "yarn-cache-path=$(yarn cache dir)" >> $GITHUB_ENV
+
+      - name: Save yarn cache
+        uses: actions/cache/save@v4
+        if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ env.yarn-cache-path }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
