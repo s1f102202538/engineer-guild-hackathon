@@ -16,7 +16,6 @@ concurrency:
 defaults:
   run:
     working-directory: packages
-    timeout-minutes: 20
 
 jobs:
   install-yarn-deps:
