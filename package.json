@@ -14,7 +14,6 @@
     "eslint-config-next": "^15.1.7",
     "eslint-config-prettier": "^10.0.1",
     "eslint-import-resolver-typescript": "^3.8.3",
-    "eslint-plugin-node": "^11.1.0",
     "globals": "^16.0.0",
     "lerna": "^8.2.0",
     "nodemon": "^3.1.9",
