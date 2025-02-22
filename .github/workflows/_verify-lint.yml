@@ -5,6 +5,7 @@ on:
     inputs:
       working-directory:
         description: 'Working directory for ESLint'
+        type: string
         required: false
         default: 'packages/'
 
