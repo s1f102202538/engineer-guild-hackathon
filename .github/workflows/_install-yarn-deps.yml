@@ -22,11 +22,11 @@ jobs:
       - name: Setup Node.js
         uses: ./.github/actions/common-setup
 
-      - name: Enable Corepack
-        run: corepack enable
-
       - name: Setup yarn v4
-        run: yarn set version stable
+        run: |
+          corepack enable
+          corepack prepare yarn@4.6.0 --activate
+          yarn set version 4.6.0
 
       - name: Restore yarn cache
         uses: ./.github/actions/restore-yarn-cache
@@ -34,7 +34,7 @@ jobs:
         if: ${{ inputs.use-yarn-cache }} == true
 
       - name: Install dependencies
-        run: yes | yarn install
+        run: yes | yarn install --frozen-lockfile
         if: steps.restore-yarn-cache.outputs.cache-hit != 'true'
 
       - name: Get yarn dependencies from cache
