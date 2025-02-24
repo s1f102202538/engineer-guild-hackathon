@@ -28,7 +28,8 @@
         "cweijan.vscode-database-client2",
         "esbenp.prettier-vscode",
         "prisma.prisma",
-        "github.copilot"
+        "github.copilot",
+        "github.vscode-github-actions"
       ]
     }
   },
