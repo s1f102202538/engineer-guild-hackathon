@@ -3,7 +3,7 @@
   "packageManager": "yarn@4.6.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon --exec ts-node src/index.ts",
     "prisma:generate": "prisma generate --schema src/prisma/schema.prisma"
   },
   "dependencies": {
@@ -21,6 +21,10 @@
   "devDependencies": {
     "@types/body-parser": "^1",
     "@types/express": "^5.0.0",
-    "@types/multer": "^1"
+    "@types/multer": "^1",
+    "@types/node": "^22.13.5",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   }
 }
