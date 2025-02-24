@@ -1,5 +1,5 @@
 import { createExpressServer } from 'routing-controllers';
-import UserController from './controller/UserController';
+import UserController from './controllers/UserController';
 
 const server = createExpressServer({
   controllers: [UserController],

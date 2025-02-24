@@ -3,7 +3,7 @@ import { Container } from 'inversify';
 
 import UserService from '../services/UserService';
 import UserRepository from '../repositories/UserRepository';
-import UserController from '../controller/UserController';
+import UserController from '../controllers/UserController';
 
 import { TYPES } from './types';
 
