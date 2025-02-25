@@ -28,7 +28,7 @@ export default class DailyPatienceCalorieController {
   ) {
     try {
       const { clientId } = userClientIdRequest;
-      const data = await this.dailyPatienceCalorieService.getAllCalorieData(clientId);
+      const data = await this.dailyPatienceCalorieService.GetAllCalorieData(clientId);
 
       const allCalorieData = data.map((dailyCalorieData) => {
         return {
