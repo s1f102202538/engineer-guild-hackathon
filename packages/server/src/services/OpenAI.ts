@@ -7,20 +7,29 @@ export default class OpenAI {
 
   constructor() {
     const configuration = new Configuration({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: `${process.env.OPENAI_API_KEY}`,
     });
     this.openai = new OpenAIApi(configuration);
+  }
+
+  private async createChatCompletion(prompt: string, maxTokens: number): Promise<string> {
+    try {
+      const response = await this.openai.createChatCompletion({
+        model: 'gpt-4',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: maxTokens,
+      });
+      return response.data.choices[0].message?.content.trim();
+    } catch (error) {
+      console.error('Error creating chat completion:', error);
+      throw new Error('Chat completion failed');
+    }
   }
 
   async convertFoodToCalories(food: string): Promise<number> {
     try {
       const prompt = `次の食べ物のカロリーを数字だけで答えてください: ${food}`;
-      const response = await this.openai.createChatCompletion({
-        model: 'gpt-4',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 50,
-      });
-      const calorieString = response.data.choices[0].message?.content.trim();
+      const calorieString = await this.createChatCompletion(prompt, 50);
       const calories = parseInt(calorieString, 10);
       if (isNaN(calories)) {
         throw new Error('カロリーの変換に失敗しました');
@@ -35,12 +44,7 @@ export default class OpenAI {
   async adviseAgainstEating(food: string): Promise<string> {
     try {
       const prompt = `ユーザーが「${food}を食べたい」と言っています。ユーザーが食べないように諭してください。`;
-      const response = await this.openai.createChatCompletion({
-        model: 'gpt-4',
-        messages: [{ role: 'user', content: prompt }],
-        max_tokens: 50,
-      });
-      return response.data.choices[0].message?.content.trim();
+      return await this.createChatCompletion(prompt, 50);
     } catch (error) {
       console.error('Error advising against eating:', error);
       return 'エラーが発生しました。もう一度試してください。';
