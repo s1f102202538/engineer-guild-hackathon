@@ -37,7 +37,7 @@ export default class OpenAI {
     return `ユーザーが「${food}を食べたい」と言っています。ユーザーが食べないように諭してください。`;
   }
 
-  public async convertFoodToCalories(food: string): Promise<number> {
+  public async ConvertFoodToCalories(food: string): Promise<number> {
     const prompt = this.createCaloriePrompt(food);
     const calorieString = await this.createChatCompletion(prompt, 50);
     const calories = parseInt(calorieString, 10);
@@ -47,7 +47,7 @@ export default class OpenAI {
     return calories;
   }
 
-  public async adviseAgainstEating(food: string): Promise<string> {
+  public async AdviseAgainstEating(food: string): Promise<string> {
     const prompt = this.createAdvisePrompt(food);
     return await this.createChatCompletion(prompt, 50);
   }
