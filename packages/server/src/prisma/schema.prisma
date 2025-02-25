@@ -19,7 +19,7 @@ model User {
   name                  String
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
-  caloriesGoal          caloriesGoal?
+  caloriesGoal          CaloriesGoal?
   DailyPatienceCalories DailyPatienceCalorie[]
 }
 
@@ -33,7 +33,7 @@ model DailyPatienceCalorie {
   updatedAt DateTime @updatedAt
 }
 
-model caloriesGoal {
+model CaloriesGoal {
   id          Int      @id @default(autoincrement())
   userId      String   @unique
   User        User     @relation(fields: [userId], references: [id])
