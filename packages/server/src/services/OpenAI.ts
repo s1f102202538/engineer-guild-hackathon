@@ -12,6 +12,7 @@ export default class OpenAI {
     this.openai = new OpenAIApi(configuration);
   }
 
+  // chatgpt
   private async createChatCompletion(prompt: string, maxTokens: number): Promise<string> {
     try {
       const response = await this.openai.createChatCompletion({
@@ -19,35 +20,35 @@ export default class OpenAI {
         messages: [{ role: 'user', content: prompt }],
         max_tokens: maxTokens,
       });
-      return response.data.choices[0].message?.content.trim();
+      return response.data.choices[0].message?.content ?? '';
     } catch (error) {
-      console.error('Error creating chat completion:', error);
+      console.error('OpenAI:createChatCompletion: Error creating chat completion:', error);
       throw new Error('Chat completion failed');
     }
   }
 
+  // カロリープロンプトを生成する関数
+  private createCaloriePrompt(food: string): string {
+    return `次の食べ物のカロリーを数字だけで答えてください: ${food}`;
+  }
+
+  // 食べないように諭すプロンプトを生成する関数
+  private createAdvisePrompt(food: string): string {
+    return `ユーザーが「${food}を食べたい」と言っています。ユーザーが食べないように諭してください。`;
+  }
+
   async convertFoodToCalories(food: string): Promise<number> {
-    try {
-      const prompt = `次の食べ物のカロリーを数字だけで答えてください: ${food}`;
-      const calorieString = await this.createChatCompletion(prompt, 50);
-      const calories = parseInt(calorieString, 10);
-      if (isNaN(calories)) {
-        throw new Error('カロリーの変換に失敗しました');
-      }
-      return calories;
-    } catch (error) {
-      console.error('Error converting food to calories:', error);
-      return 0;
+    const prompt = this.createCaloriePrompt(food);
+    const calorieString = await this.createChatCompletion(prompt, 50);
+    const calories = parseInt(calorieString, 10);
+    if (isNaN(calories)) {
+      throw new Error('カロリーの変換に失敗しました');
     }
+    return calories;
   }
 
   async adviseAgainstEating(food: string): Promise<string> {
-    try {
-      const prompt = `ユーザーが「${food}を食べたい」と言っています。ユーザーが食べないように諭してください。`;
-      return await this.createChatCompletion(prompt, 50);
-    } catch (error) {
-      console.error('Error advising against eating:', error);
-      return 'エラーが発生しました。もう一度試してください。';
-    }
+    const prompt = this.createAdvisePrompt(food);
+    return await this.createChatCompletion(prompt, 50);
   }
 }
