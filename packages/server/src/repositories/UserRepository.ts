@@ -20,7 +20,7 @@ export default class UserRepository {
     const user = await prisma.user.findUnique({ where: { clientId } });
     // 存在しているかチェック
     if (user != null) {
-      throw new Error('UserRepository: User already exists');
+      throw new Error('UserRepository:CreateUser: User already exists');
     }
 
     await prisma.user.create({ data: { clientId, name } });
