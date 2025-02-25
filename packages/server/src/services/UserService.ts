@@ -23,4 +23,19 @@ export default class UserService {
   public async DeleteUser(clientId: string): Promise<void> {
     await this.userRepository.DeleteUser(clientId);
   }
+
+  public async GetUserCalorieGoal(clientId: string): Promise<number> {
+    const calorieGoal = await this.userRepository.FindUserCalorieGoal(clientId);
+    return calorieGoal.calorieGoal;
+  }
+
+  public async UpdateUserCalorieGoal(clientId: string, calorieGoal: number, deadline: Date): Promise<void> {
+    const calorieGoalData = await this.userRepository.FindUserCalorieGoal(clientId);
+
+    if (calorieGoalData == null) {
+      await this.userRepository.CreateUserCalorieGoal(clientId, calorieGoal, deadline);
+    } else {
+      await this.userRepository.UpdateUserCalorieGoal(calorieGoalData.id, calorieGoal, deadline);
+    }
+  }
 }
