@@ -14,7 +14,7 @@ export default class DailyPatienceCalorieService {
     this.dailyPatienceCalorieRepository = dailyPatienceCalorieRepository;
   }
 
-  public async updateCalorie(userId: string, updateCalorie: number): Promise<void> {
+  public async UpdateCalorie(userId: string, updateCalorie: number): Promise<void> {
     const todayData = await this.dailyPatienceCalorieRepository.FindTodayData(userId);
 
     // 今日のデータがない場合は新規作成
@@ -25,7 +25,7 @@ export default class DailyPatienceCalorieService {
     }
   }
 
-  public async getAllCalorieData(userId: string): Promise<DailyPatienceCalorie[]> {
+  public async GetAllCalorieData(userId: string): Promise<DailyPatienceCalorie[]> {
     return await this.dailyPatienceCalorieRepository.FindAllData(userId);
   }
 }
