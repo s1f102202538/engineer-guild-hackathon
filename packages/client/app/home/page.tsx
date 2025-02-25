@@ -1,5 +1,5 @@
 import React from 'react';
-import EndureCalories from './_components/ EndureCalories';
+import EndureCalories from './_components/EndureCalories';
 import CheckWeight from './_components/CheckWeight';
 import Chat from './_components/Chat';
 import Navbar from '../components/Navbar';
