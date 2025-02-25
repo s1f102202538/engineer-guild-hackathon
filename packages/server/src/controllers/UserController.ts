@@ -6,6 +6,7 @@ import UserService from '../services/UserService';
 
 import { TYPES } from '../config/types';
 import { IsAlpha } from 'class-validator';
+import { UserClientIdRequest } from '../models/commonRequest';
 
 class CreateUserRequest {
   @IsAlpha()
@@ -13,11 +14,6 @@ class CreateUserRequest {
 
   @IsAlpha()
   name!: string;
-}
-
-class UserClientIdRequest {
-  @IsAlpha()
-  clientId!: string;
 }
 
 @injectable()
