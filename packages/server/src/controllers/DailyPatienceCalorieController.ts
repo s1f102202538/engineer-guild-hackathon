@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Controller, Res, Post, Body } from 'routing-controllers';
+import { Controller, Res, Post, Body, QueryParam } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
 
 import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieService';
@@ -10,13 +10,15 @@ import { UserClientIdRequest } from '../models/commonRequest';
 import { IsString, IsNotEmpty } from 'class-validator';
 
 import DailyPatienceCalorieModel from '../models/DailyPatienceCalorieModel';
+import { CalorieDataStatistics } from '../models/CalorieDataStatistics';
+import { TimeUnit } from '../repositories/DailyPatienceCalorieRepository';
 
-class DailyCalorieDataResponse {
+class TodayCalorieDataResponse {
   todayCalorieData!: DailyPatienceCalorieModel;
 }
 
-class GetAllCalorieDataResponse {
-  allCalorieData!: DailyPatienceCalorieModel[];
+class CalorieDataStatisticsResponse {
+  calorieDataStatistics!: CalorieDataStatistics;
 }
 
 class UploadFoodRequest {
@@ -50,7 +52,7 @@ export default class DailyPatienceCalorieController {
   @Post('/get-today-calorie-data')
   async getDailyCalorieData(
     @Body() userClientIdRequest: UserClientIdRequest,
-    @Res() response: Response<DailyCalorieDataResponse>
+    @Res() response: Response<TodayCalorieDataResponse>
   ) {
     try {
       const { clientId } = userClientIdRequest;
@@ -64,29 +66,6 @@ export default class DailyPatienceCalorieController {
       return response.status(200).send({ todayCalorieData });
     } catch (error) {
       console.error('DailyPatienceCalorieController:getDailyCalorieData: ', error);
-      return response.status(500);
-    }
-  }
-
-  @Post('/get-all-calorie-data')
-  async getAllCalorieData(
-    @Body() userClientIdRequest: UserClientIdRequest,
-    @Res() response: Response<GetAllCalorieDataResponse>
-  ) {
-    try {
-      const { clientId } = userClientIdRequest;
-      const data = await this.dailyPatienceCalorieService.GetAllCalorieData(clientId);
-
-      const allCalorieData = data.map((dailyCalorieData) => {
-        return {
-          date: dailyCalorieData.date,
-          calories: dailyCalorieData.calories,
-        } as DailyPatienceCalorieModel;
-      });
-
-      return response.status(200).send({ allCalorieData });
-    } catch (error) {
-      console.error('DailyPatienceCalorieController:getAllCalorieData: ', error);
       return response.status(500);
     }
   }
@@ -105,6 +84,23 @@ export default class DailyPatienceCalorieController {
       return response.status(200).send({ calories });
     } catch (error) {
       console.error('DailyPatienceCalorieController:convertFoodToCalories: ', error);
+      return response.status(500);
+    }
+  }
+
+  @Post('/get-calorie-data-statistics/:timeUnit')
+  async getDailyStatistics(
+    @QueryParam('timeUnit') timeUnit: TimeUnit,
+    @Body() userClientIdRequest: UserClientIdRequest,
+    @Res() response: Response<CalorieDataStatisticsResponse>
+  ) {
+    try {
+      const { clientId } = userClientIdRequest;
+      const data = await this.dailyPatienceCalorieService.GetCalorieDataStatistics(clientId, timeUnit);
+
+      return response.status(200).send({ calorieDataStatistics: data });
+    } catch (error) {
+      console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
       return response.status(500);
     }
   }
