@@ -13,14 +13,16 @@ export default class OpenAIService {
   }
 
   // chatgpt
-  private async createChatCompletion(prompt: string, maxTokens: number): Promise<string> {
+  private async createChatCompletion(prompt: string, maxTokens: number): Promise<string | null> {
     try {
       const response = await this.openAIService.createChatCompletion({
         model: 'gpt-4',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: maxTokens,
       });
-      return response.data.choices[0].message?.content ?? '';
+
+      // TODO: レスポンスのバリデーション
+      return response.data.choices[0].message?.content ?? null;
     } catch (error) {
       console.error('OpenAI:createChatCompletion: Error creating chat completion:', error);
       throw new Error('Chat completion failed');
@@ -41,16 +43,15 @@ export default class OpenAIService {
   public async ConvertFoodToCalories(food: string): Promise<number | null> {
     const prompt = this.createCaloriePrompt(food);
     const calorieString = await this.createChatCompletion(prompt, 50);
-    const calories = parseInt(calorieString, 10);
-    if (isNaN(calories)) {
-      console.error('カロリーの数字変換に失敗しました');
-      return null; // エラーが発生した場合はnullを返す
-    }
+
+    const calories = calorieString ? Number(calorieString) : null;
+
     return calories;
   }
 
-  public async AdviseAgainstEating(food: string): Promise<string> {
+  public async AdviseAgainstEating(food: string): Promise<string | null> {
     const prompt = this.createAdvisePrompt(food);
+
     return await this.createChatCompletion(prompt, 50);
   }
 }

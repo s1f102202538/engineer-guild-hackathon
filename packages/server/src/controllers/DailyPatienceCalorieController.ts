@@ -19,7 +19,7 @@ class GetAllCalorieDataResponse {
   allCalorieData!: DailyPatienceCalorieModel[];
 }
 
-class ConvertFoodToCaloriesRequest {
+class UploadFoodRequest {
   @IsString()
   @IsNotEmpty()
   food!: string;
@@ -29,9 +29,8 @@ class ConvertFoodToCaloriesRequest {
   userId!: string;
 }
 
-class ConvertFoodToCaloriesResponse {
-  calories?: number;
-  message?: string;
+class UploadFoodResponse {
+  calories!: number | null;
 }
 
 @injectable()
@@ -93,24 +92,20 @@ export default class DailyPatienceCalorieController {
   }
 
   @Post('/upload-food')
-  async convertFoodToCalories(
-    @Body() convertFoodToCaloriesRequest: ConvertFoodToCaloriesRequest,
-    @Res() response: Response<ConvertFoodToCaloriesResponse>
-  ) {
+  async uploadFood(@Body() uploadFoodRequest: UploadFoodRequest, @Res() response: Response<UploadFoodResponse>) {
     try {
-      const { food, userId } = convertFoodToCaloriesRequest;
+      const { food, userId } = uploadFoodRequest;
       const calories = await this.openAI.ConvertFoodToCalories(food);
 
       if (calories !== null) {
-        // カロリーをDBに更新
+        // カロリーを更新
         await this.dailyPatienceCalorieService.UpdateCalorie(userId, calories);
-        return response.status(200).send({ calories });
-      } else {
-        return response.status(400).send({ message: '正しく更新できませんでした' });
       }
+
+      return response.status(200).send({ calories });
     } catch (error) {
       console.error('DailyPatienceCalorieController:convertFoodToCalories: ', error);
-      return response.status(500).send({ message: 'サーバーエラーが発生しました' });
+      return response.status(500);
     }
   }
 }
