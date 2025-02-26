@@ -37,14 +37,14 @@ class UploadFoodResponse {
 @Controller('/daily-patience-calorie')
 export default class DailyPatienceCalorieController {
   private dailyPatienceCalorieService: IDailyPatienceCalorieService;
-  private openAI: OpenAIService;
+  private openAIService: OpenAIService;
 
   constructor(
     @inject(TYPES.IDailyPatienceCalorieService) dailyPatienceCalorieService: IDailyPatienceCalorieService,
     @inject(TYPES.OpenAIService) openAI: OpenAIService
   ) {
     this.dailyPatienceCalorieService = dailyPatienceCalorieService;
-    this.openAI = openAI;
+    this.openAIService = openAI;
   }
 
   @Post('/get-today-calorie-data')
@@ -95,7 +95,7 @@ export default class DailyPatienceCalorieController {
   async uploadFood(@Body() uploadFoodRequest: UploadFoodRequest, @Res() response: Response<UploadFoodResponse>) {
     try {
       const { food, userId } = uploadFoodRequest;
-      const calories = await this.openAI.ConvertFoodToCalories(food);
+      const calories = await this.openAIService.ConvertFoodToCalories(food);
 
       if (calories !== null) {
         // カロリーを更新
