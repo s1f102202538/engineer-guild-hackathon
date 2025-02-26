@@ -1,10 +1,10 @@
-import 'reflect-metadata';
 import { injectable } from 'inversify';
 import prisma from '../prisma/client';
 import { User, CaloriesGoal } from '@prisma/client';
+import IUserRepository from '../interfaces/IUserRepository';
 
 @injectable()
-export default class UserRepository {
+export default class UserRepository implements IUserRepository {
   public async FindUserByClientId(clientId: string): Promise<User> {
     const user = await prisma.user.findUnique({ where: { clientId } });
 

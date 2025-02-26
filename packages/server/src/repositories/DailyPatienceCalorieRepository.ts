@@ -1,10 +1,10 @@
-import 'reflect-metadata';
 import { injectable } from 'inversify';
 import prisma from '../prisma/client';
 import { DailyPatienceCalorie } from '@prisma/client';
+import IDailyPatienceCalorieRepository from '../interfaces/IDailyPatienceCalorieRepository';
 
 @injectable()
-export default class DailyPatienceCalorieRepository {
+export default class DailyPatienceCalorieRepository implements IDailyPatienceCalorieRepository {
   public async FindTodayData(userId: string): Promise<DailyPatienceCalorie | null> {
     const today = new Date();
     // 日付のみで比較するため、時刻を 0 に設定

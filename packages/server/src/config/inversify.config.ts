@@ -3,7 +3,6 @@ import { Container } from 'inversify';
 
 import UserService from '../services/UserService';
 import UserRepository from '../repositories/UserRepository';
-import UserController from '../controllers/UserController';
 import DailyPatienceCalorieService from '../services/DailyPatienceCalorieService';
 import DailyPatienceCalorieRepository from '../repositories/DailyPatienceCalorieRepository';
 
@@ -11,14 +10,13 @@ import { TYPES } from './types';
 
 const containers = new Container();
 
-containers.bind<UserService>(TYPES.UserService).to(UserService).inSingletonScope();
-containers.bind<UserRepository>(TYPES.UserRepository).to(UserRepository).inSingletonScope();
-containers.bind<UserController>(TYPES.UserController).to(UserController).inSingletonScope();
+containers.bind<UserService>(TYPES.IUserService).to(UserService).inSingletonScope();
+containers.bind<UserRepository>(TYPES.IUserRepository).to(UserRepository).inSingletonScope();
 containers
-  .bind<DailyPatienceCalorieService>(TYPES.DailyPatienceCalorieService)
+  .bind<DailyPatienceCalorieService>(TYPES.IDailyPatienceCalorieService)
   .to(DailyPatienceCalorieService)
   .inSingletonScope();
 containers
-  .bind<DailyPatienceCalorieRepository>(TYPES.DailyPatienceCalorieRepository)
+  .bind<DailyPatienceCalorieRepository>(TYPES.IDailyPatienceCalorieRepository)
   .to(DailyPatienceCalorieRepository)
   .inSingletonScope();

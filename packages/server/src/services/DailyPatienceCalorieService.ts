@@ -1,15 +1,16 @@
-import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
-import DailyPatienceCalorieRepository from '../repositories/DailyPatienceCalorieRepository';
+import IDailyPatienceCalorieRepository from '../interfaces/IDailyPatienceCalorieRepository';
+import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieService';
+
 import { TYPES } from '../config/types';
 import { DailyPatienceCalorie } from '@prisma/client';
 
 @injectable()
-export default class DailyPatienceCalorieService {
-  private dailyPatienceCalorieRepository: DailyPatienceCalorieRepository;
+export default class DailyPatienceCalorieService implements IDailyPatienceCalorieService {
+  private dailyPatienceCalorieRepository: IDailyPatienceCalorieRepository;
 
   constructor(
-    @inject(TYPES.DailyPatienceCalorieRepository) dailyPatienceCalorieRepository: DailyPatienceCalorieRepository
+    @inject(TYPES.IDailyPatienceCalorieRepository) dailyPatienceCalorieRepository: IDailyPatienceCalorieRepository
   ) {
     this.dailyPatienceCalorieRepository = dailyPatienceCalorieRepository;
   }

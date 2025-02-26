@@ -1,8 +1,7 @@
-import 'reflect-metadata';
 import { Response } from 'express';
 import { Controller, Res, Post, Body, Delete } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
-import UserService from '../services/UserService';
+import IUserService from '../interfaces/IUserService';
 
 import { TYPES } from '../config/types';
 import { IsAlpha, IsDate, IsNumber } from 'class-validator';
@@ -44,9 +43,9 @@ class GetUserDataResponse {
 @injectable()
 @Controller('/user')
 export default class UserController {
-  private userService: UserService;
+  private userService: IUserService;
 
-  constructor(@inject(TYPES.UserService) userService: UserService) {
+  constructor(@inject(TYPES.IUserService) userService: IUserService) {
     this.userService = userService;
   }
 
