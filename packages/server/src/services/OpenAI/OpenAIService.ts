@@ -1,8 +1,8 @@
 import { inject, injectable } from 'inversify';
 import { Configuration, OpenAIApi } from 'openai';
-import IOpenAIService from '../interfaces/IOpenAIService';
-import IOpenAIRepository from '../interfaces/IOpenAIRepository';
-import { TYPES } from '../config/types';
+import IOpenAIService from './IOpenAIService';
+import IOpenAIRepository from '../../repositories/OpenAIRepository/IOpenAIRepository';
+import { TYPES } from '../../config/types';
 import { ChatLog } from '@prisma/client';
 
 @injectable()

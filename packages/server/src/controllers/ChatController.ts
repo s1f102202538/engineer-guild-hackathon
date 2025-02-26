@@ -2,8 +2,8 @@ import { Response } from 'express';
 import { injectable, inject } from 'inversify';
 import { Body, Controller, Post, QueryParam, Res } from 'routing-controllers';
 
-import IOpenAIService from '../interfaces/IOpenAIService';
-import IUserService from '../interfaces/IUserService';
+import IOpenAIService from '../services/OpenAI/IOpenAIService';
+import IUserService from '../services/User/IUserService';
 import ChatLogModel from '../models/ChatLogModel';
 import { UserClientIdRequest } from '../models/commonRequest';
 import { TYPES } from '../config/types';

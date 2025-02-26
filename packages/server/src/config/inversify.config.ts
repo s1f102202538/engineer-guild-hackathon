@@ -1,14 +1,14 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 
-import UserService from '../services/UserService';
-import UserRepository from '../repositories/UserRepository';
-import DailyPatienceCalorieService from '../services/DailyPatienceCalorieService';
-import DailyPatienceCalorieRepository from '../repositories/DailyPatienceCalorieRepository';
+import UserService from '../services/User/UserService';
+import UserRepository from '../repositories/User/UserRepository';
+import DailyPatienceCalorieService from '../services/DailyPatienceCalorie/DailyPatienceCalorieService';
+import DailyPatienceCalorieRepository from '../repositories/DailyPatienceCalorie/DailyPatienceCalorieRepository';
+import OpenAIService from '../services/OpenAI/OpenAIService';
+import OpenAIRepository from '../repositories/OpenAI/OpenAIRepository';
 
 import { TYPES } from './types';
-import OpenAIService from '../services/OpenAIService';
-import OpenAIRepository from '../repositories/OpenAIRepository';
 
 const containers = new Container();
 

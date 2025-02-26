@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
-import prisma from '../prisma/client';
+import prisma from '../../prisma/client';
 import { ChatLog } from '@prisma/client';
-import IOpenAIRepository from '../interfaces/IOpenAIRepository';
+import IOpenAIRepository from './IOpenAIRepository';
 
 @injectable()
 export default class OpenAIRepository implements IOpenAIRepository {

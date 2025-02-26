@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
-import prisma from '../prisma/client';
+import prisma from '../../prisma/client';
 import { User } from '@prisma/client';
-import IUserRepository from '../interfaces/IUserRepository';
+import IUserRepository from './IUserRepository';
 
 @injectable()
 export default class UserRepository implements IUserRepository {
