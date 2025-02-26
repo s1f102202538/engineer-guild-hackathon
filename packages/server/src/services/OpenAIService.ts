@@ -78,10 +78,15 @@ export default class OpenAIService {
     return calories;
   }
 
-  public async AdviseAgainstEating(food: string): Promise<string | null> {
+  public async AdviseAgainstEating(food: string): Promise<string> {
     const prompt = this.createAdvisePrompt(food);
 
     // TODO: バリデーション
-    return await this.createChatCompletion(prompt, 50);
+    const response = await this.createChatCompletion(prompt, 50);
+    if (response == null) {
+      throw new Error('OpenAIService:AdviseAgainstEating: Failed to create chat completion');
+    }
+
+    return response;
   }
 }
