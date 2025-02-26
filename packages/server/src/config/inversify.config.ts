@@ -1,10 +1,12 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 
-import UserService from '../services/UserService';
-import UserRepository from '../repositories/UserRepository';
-import DailyPatienceCalorieService from '../services/DailyPatienceCalorieService';
-import DailyPatienceCalorieRepository from '../repositories/DailyPatienceCalorieRepository';
+import UserService from '../services/User/UserService';
+import UserRepository from '../repositories/User/UserRepository';
+import DailyPatienceCalorieService from '../services/DailyPatienceCalorie/DailyPatienceCalorieService';
+import DailyPatienceCalorieRepository from '../repositories/DailyPatienceCalorie/DailyPatienceCalorieRepository';
+import OpenAIService from '../services/OpenAI/OpenAIService';
+import OpenAIRepository from '../repositories/OpenAI/OpenAIRepository';
 
 import { TYPES } from './types';
 
@@ -20,3 +22,5 @@ containers
   .bind<DailyPatienceCalorieRepository>(TYPES.IDailyPatienceCalorieRepository)
   .to(DailyPatienceCalorieRepository)
   .inSingletonScope();
+containers.bind<OpenAIService>(TYPES.IOpenAIService).to(OpenAIService).inSingletonScope();
+containers.bind<OpenAIRepository>(TYPES.IOpenAIRepository).to(OpenAIRepository).inSingletonScope();

@@ -1,9 +1,11 @@
 import { injectable, inject } from 'inversify';
-import IDailyPatienceCalorieRepository from '../interfaces/IDailyPatienceCalorieRepository';
-import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieService';
+import IDailyPatienceCalorieRepository from '../../repositories/DailyPatienceCalorie/IDailyPatienceCalorieRepository';
+import IDailyPatienceCalorieService from './IDailyPatienceCalorieService';
 
-import { TYPES } from '../config/types';
+import { TYPES } from '../../config/types';
 import { DailyPatienceCalorie } from '@prisma/client';
+import { TimeUnit } from '../../repositories/DailyPatienceCalorie/DailyPatienceCalorieRepository';
+import { CalorieDataStatistics } from '../../models/CalorieDataStatistics';
 
 @injectable()
 export default class DailyPatienceCalorieService implements IDailyPatienceCalorieService {
@@ -42,7 +44,7 @@ export default class DailyPatienceCalorieService implements IDailyPatienceCalori
     return todayData;
   }
 
-  public async GetAllCalorieData(userId: string): Promise<DailyPatienceCalorie[]> {
-    return await this.dailyPatienceCalorieRepository.FindAllData(userId);
+  public async GetCalorieDataStatistics(userId: string, timeUnit: TimeUnit): Promise<CalorieDataStatistics> {
+    return this.dailyPatienceCalorieRepository.AggregateCalorieData(userId, timeUnit);
   }
 }

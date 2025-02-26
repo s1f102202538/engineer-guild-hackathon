@@ -1,15 +1,21 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { Configuration, OpenAIApi } from 'openai';
+import IOpenAIService from './IOpenAIService';
+import IOpenAIRepository from '../../repositories/OpenAIRepository/IOpenAIRepository';
+import { TYPES } from '../../config/types';
+import { ChatLog } from '@prisma/client';
 
 @injectable()
-export default class OpenAIService {
+export default class OpenAIService implements IOpenAIService {
   private openAIService: OpenAIApi;
+  private openAIRepository: IOpenAIRepository;
 
-  constructor() {
+  constructor(@inject(TYPES.IOpenAIRepository) openAIRepository: IOpenAIRepository) {
     const configuration = new Configuration({
       apiKey: `${process.env.OPENAI_API_KEY}`,
     });
     this.openAIService = new OpenAIApi(configuration);
+    this.openAIRepository = openAIRepository;
   }
 
   // chatgpt
@@ -78,10 +84,23 @@ export default class OpenAIService {
     return calories;
   }
 
-  public async AdviseAgainstEating(food: string): Promise<string | null> {
+  public async AdviseAgainstEating(food: string): Promise<string> {
     const prompt = this.createAdvisePrompt(food);
 
     // TODO: バリデーション
-    return await this.createChatCompletion(prompt, 50);
+    const response = await this.createChatCompletion(prompt, 50);
+    if (response == null) {
+      throw new Error('OpenAIService:AdviseAgainstEating: Failed to create chat completion');
+    }
+
+    return response;
+  }
+
+  public async SaveChatLog(userId: string, message: string, isAI: boolean): Promise<void> {
+    await this.openAIRepository.CreateChatLog(userId, message, isAI);
+  }
+
+  public async GetChatLog(userId: string, maxTakes: number = 50): Promise<ChatLog[]> {
+    return await this.openAIRepository.GetChatLog(userId, maxTakes);
   }
 }
