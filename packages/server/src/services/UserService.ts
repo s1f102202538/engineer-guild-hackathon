@@ -1,14 +1,15 @@
-import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
-import UserRepository from '../repositories/UserRepository';
+import IUserRepository from '../interfaces/IUserRepository';
+import IUserService from '../interfaces/IUserService';
+
 import { TYPES } from '../config/types';
 import { User } from '@prisma/client';
 
 @injectable()
-export default class UserService {
-  private userRepository: UserRepository;
+export default class UserService implements IUserService {
+  private userRepository: IUserRepository;
 
-  constructor(@inject(TYPES.UserRepository) userRepository: UserRepository) {
+  constructor(@inject(TYPES.IUserRepository) userRepository: IUserRepository) {
     this.userRepository = userRepository;
   }
 

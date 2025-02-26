@@ -1,12 +1,11 @@
-import 'reflect-metadata';
 import { Response } from 'express';
 import { Controller, Res, Post, Body } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
-import DailyPatienceCalorieService from '../services/DailyPatienceCalorieService';
+import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieService';
 
 import { TYPES } from '../config/types';
 import { UserClientIdRequest } from '../models/commonRequest';
-import DailyPatienceCalorie from '../models/DailyPatienceCalorie';
+import DailyPatienceCalorie from '../models/DailyPatienceCalorieModel';
 
 class GetAllCalorieDataResponse {
   allCalorieData!: DailyPatienceCalorie[];
@@ -15,9 +14,9 @@ class GetAllCalorieDataResponse {
 @injectable()
 @Controller('/daily-patience-calorie')
 export default class DailyPatienceCalorieController {
-  private dailyPatienceCalorieService: DailyPatienceCalorieService;
+  private dailyPatienceCalorieService: IDailyPatienceCalorieService;
 
-  constructor(@inject(TYPES.DailyPatienceCalorieService) dailyPatienceCalorieService: DailyPatienceCalorieService) {
+  constructor(@inject(TYPES.IDailyPatienceCalorieService) dailyPatienceCalorieService: IDailyPatienceCalorieService) {
     this.dailyPatienceCalorieService = dailyPatienceCalorieService;
   }
 
