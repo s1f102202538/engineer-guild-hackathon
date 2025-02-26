@@ -18,11 +18,17 @@ export default class DailyPatienceCalorieService implements IDailyPatienceCalori
   public async UpdateCalorie(userId: string, updateCalorie: number): Promise<void> {
     const todayData = await this.dailyPatienceCalorieRepository.FindTodayData(userId);
 
+    if (todayData == null) {
+      throw new Error('DailyPatienceCalorieService:UpdateCalorie: Today data not found');
+    }
+
+    const totalUpdateCalorie = todayData.calories + updateCalorie;
+
     // 今日のデータがない場合は新規作成
     if (todayData == null) {
       await this.dailyPatienceCalorieRepository.CreateData(userId, updateCalorie);
     } else {
-      await this.dailyPatienceCalorieRepository.UpdateData(userId, updateCalorie);
+      await this.dailyPatienceCalorieRepository.UpdateData(todayData.id, totalUpdateCalorie);
     }
   }
 

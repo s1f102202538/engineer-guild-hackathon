@@ -7,5 +7,5 @@ export default interface IDailyPatienceCalorieRepository {
 
   CreateData(userId: string, InitCalorie: number): Promise<DailyPatienceCalorie>;
 
-  UpdateData(userId: string, UpdateCalories: number): Promise<void>;
+  UpdateData(id: number, UpdateCalories: number): Promise<void>;
 }
