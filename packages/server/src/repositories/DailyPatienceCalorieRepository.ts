@@ -30,18 +30,20 @@ export default class DailyPatienceCalorieRepository implements IDailyPatienceCal
     return data;
   }
 
-  public async CreateData(userId: string, InitCalorie: number): Promise<void> {
+  public async CreateData(userId: string, InitCalorie: number): Promise<DailyPatienceCalorie> {
     const date = new Date();
     // 日付のみを保存
     date.setHours(0, 0, 0, 0);
 
-    await prisma.dailyPatienceCalorie.create({
+    const newData = await prisma.dailyPatienceCalorie.create({
       data: {
         userId,
         date,
         calories: InitCalorie,
       },
     });
+
+    return newData;
   }
 
   public async UpdateData(userId: string, UpdateCalories: number): Promise<void> {

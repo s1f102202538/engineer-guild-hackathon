@@ -5,7 +5,7 @@ export default interface IDailyPatienceCalorieRepository {
 
   FindAllData(userId: string): Promise<DailyPatienceCalorie[]>;
 
-  CreateData(userId: string, InitCalorie: number): Promise<void>;
+  CreateData(userId: string, InitCalorie: number): Promise<DailyPatienceCalorie>;
 
   UpdateData(userId: string, UpdateCalories: number): Promise<void>;
 }

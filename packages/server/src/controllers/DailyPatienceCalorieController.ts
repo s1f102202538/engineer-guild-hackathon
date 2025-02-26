@@ -5,10 +5,14 @@ import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieSer
 
 import { TYPES } from '../config/types';
 import { UserClientIdRequest } from '../models/commonRequest';
-import DailyPatienceCalorie from '../models/DailyPatienceCalorieModel';
+import DailyPatienceCalorieModel from '../models/DailyPatienceCalorieModel';
+
+class DailyCalorieDataResponse {
+  todayCalorieData!: DailyPatienceCalorieModel;
+}
 
 class GetAllCalorieDataResponse {
-  allCalorieData!: DailyPatienceCalorie[];
+  allCalorieData!: DailyPatienceCalorieModel[];
 }
 
 @injectable()
@@ -18,6 +22,27 @@ export default class DailyPatienceCalorieController {
 
   constructor(@inject(TYPES.IDailyPatienceCalorieService) dailyPatienceCalorieService: IDailyPatienceCalorieService) {
     this.dailyPatienceCalorieService = dailyPatienceCalorieService;
+  }
+
+  @Post('/get-today-calorie-data')
+  async getDailyCalorieData(
+    @Body() userClientIdRequest: UserClientIdRequest,
+    @Res() response: Response<DailyCalorieDataResponse>
+  ) {
+    try {
+      const { clientId } = userClientIdRequest;
+      const data = await this.dailyPatienceCalorieService.GetTodayCalorieData(clientId);
+
+      const todayCalorieData = {
+        date: data.date,
+        calories: data.calories,
+      } as DailyPatienceCalorieModel;
+
+      return response.status(200).send({ todayCalorieData });
+    } catch (error) {
+      console.error('DailyPatienceCalorieController:getDailyCalorieData: ', error);
+      return response.status(500);
+    }
   }
 
   @Post('/get-all-calorie-data')
@@ -33,7 +58,7 @@ export default class DailyPatienceCalorieController {
         return {
           date: dailyCalorieData.date,
           calories: dailyCalorieData.calories,
-        } as DailyPatienceCalorie;
+        } as DailyPatienceCalorieModel;
       });
 
       return response.status(200).send({ allCalorieData });
