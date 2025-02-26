@@ -46,24 +46,7 @@ export default class DailyPatienceCalorieRepository implements IDailyPatienceCal
     return newData;
   }
 
-  public async UpdateData(userId: string, UpdateCalories: number): Promise<void> {
-    const today = new Date();
-    // 日付のみで比較するため、時刻を 0 に設定
-    today.setHours(0, 0, 0, 0);
-
-    const todayData = await this.FindTodayData(userId);
-
-    if (todayData == null) {
-      throw new Error('DailyPatienceCalorieRepository:UpdateData: Data not found');
-    }
-
-    await prisma.dailyPatienceCalorie.update({
-      where: {
-        id: todayData.id,
-      },
-      data: {
-        calories: todayData.calories + UpdateCalories,
-      },
-    });
+  public async UpdateData(id: number, UpdateCalories: number): Promise<void> {
+    await prisma.dailyPatienceCalorie.update({ where: { id }, data: { calories: UpdateCalories } });
   }
 }
