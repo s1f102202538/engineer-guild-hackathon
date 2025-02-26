@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 type Message = {
   text: string;
@@ -9,6 +10,34 @@ export const useChat = (userId: string) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
 
+  useEffect(() => {
+    const fetchChatLog = async () => {
+      try {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/chat/get-chat-log/50`, {
+          clientId: userId,
+        });
+
+        if (response.status === 200) {
+          const data = response.data;
+          setMessages(
+            data.chatLogs.map((log: { message: string; isUser: boolean }) => ({
+              text: log.message,
+              isUser: log.isUser,
+            }))
+          );
+        } else {
+          console.error('Failed to fetch chat log');
+        }
+      } catch (error) {
+        console.error('Error fetching chat log:', error);
+      }
+    };
+
+    if (userId) {
+      fetchChatLog();
+    }
+  }, [userId]);
+
   const handleSubmit = async () => {
     if (!inputText.trim()) return;
 
@@ -17,20 +46,16 @@ export const useChat = (userId: string) => {
     setMessages([...messages, { text: inputText, isUser: true }]);
 
     try {
-      // process.env.API_ENDPOINT_URL を使用
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/chat/persuade-user`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ clientId, message: inputText }),
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/chat/persuade-user`, {
+        clientId,
+        message: inputText,
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
         setMessages((prev) => [...prev, { text: data.message, isUser: false }]);
       } else {
-        const errorText = await response.text(); // レスポンスをテキストとして取得
+        const errorText = response.statusText;
         console.error('Failed to persuade user', errorText);
         setMessages((prev) => [...prev, { text: 'エラーが発生しました。もう一度試してください。', isUser: false }]);
       }
