@@ -7,6 +7,7 @@ import OpenAIService from '../services/OpenAIService';
 
 import { TYPES } from '../config/types';
 import { UserClientIdRequest } from '../models/commonRequest';
+import { IsString, IsNotEmpty } from 'class-validator';
 import DailyPatienceCalorie from '../models/DailyPatienceCalorie';
 
 class GetAllCalorieDataResponse {
@@ -14,7 +15,12 @@ class GetAllCalorieDataResponse {
 }
 
 class ConvertFoodToCaloriesRequest {
+  @IsString()
+  @IsNotEmpty()
   food!: string;
+
+  @IsString()
+  @IsNotEmpty()
   userId!: string;
 }
 
