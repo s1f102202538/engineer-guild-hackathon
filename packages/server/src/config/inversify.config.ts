@@ -7,6 +7,8 @@ import DailyPatienceCalorieService from '../services/DailyPatienceCalorieService
 import DailyPatienceCalorieRepository from '../repositories/DailyPatienceCalorieRepository';
 
 import { TYPES } from './types';
+import OpenAIService from '../services/OpenAIService';
+import OpenAIRepository from '../repositories/OpenAIRepository';
 
 const containers = new Container();
 
@@ -20,3 +22,5 @@ containers
   .bind<DailyPatienceCalorieRepository>(TYPES.IDailyPatienceCalorieRepository)
   .to(DailyPatienceCalorieRepository)
   .inSingletonScope();
+containers.bind<OpenAIService>(TYPES.IOpenAIService).to(OpenAIService).inSingletonScope();
+containers.bind<OpenAIRepository>(TYPES.IOpenAIRepository).to(OpenAIRepository).inSingletonScope();

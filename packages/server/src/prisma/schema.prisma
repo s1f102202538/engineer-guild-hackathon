@@ -22,6 +22,7 @@ model User {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   DailyPatienceCalories DailyPatienceCalorie[]
+  ChatLog               ChatLog[]
 }
 
 model DailyPatienceCalorie {
@@ -30,6 +31,16 @@ model DailyPatienceCalorie {
   User      User     @relation(fields: [userId], references: [id])
   calories  Int
   date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ChatLog {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  User      User     @relation(fields: [userId], references: [id])
+  message   String
+  isAI      Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
