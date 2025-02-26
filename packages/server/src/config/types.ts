@@ -7,8 +7,11 @@ const TYPES = {
   IDailyPatienceCalorieService: Symbol.for('DailyPatienceCalorieService'),
   DailyPatienceCalorieRepository: Symbol.for('DailyPatienceCalorieRepository'),
   DailyPatienceCalorieController: Symbol.for('DailyPatienceCalorieController'),
-  OpenAIService: Symbol.for('OpenAIService'),
   IDailyPatienceCalorieRepository: Symbol.for('IDailyPatienceCalorieRepository'),
+  OpenAIService: Symbol.for('OpenAIService'),
+  IOpenAIService: Symbol.for('IOpenAIService'),
+  OpenAIRepository: Symbol.for('OpenAIRepository'),
+  IOpenAIRepository: Symbol.for('IOpenAIRepository'),
 };
 
 export { TYPES };
