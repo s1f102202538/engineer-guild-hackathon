@@ -17,6 +17,7 @@ model User {
   id                    String                 @id @default(cuid())
   clientId              String                 @unique
   name                  String
+  weight                Float
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   caloriesGoal          CaloriesGoal?

@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { Controller, Res, Post, Body } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
 
+import DailyPatienceCalorieService from '../services/DailyPatienceCalorieService';
 import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieService';
 import OpenAIService from '../services/OpenAIService';
 
@@ -9,6 +10,7 @@ import { TYPES } from '../config/types';
 import { UserClientIdRequest } from '../models/commonRequest';
 import { IsString, IsNotEmpty } from 'class-validator';
 import DailyPatienceCalorie from '../models/DailyPatienceCalorieModel';
+
 
 class GetAllCalorieDataResponse {
   allCalorieData!: DailyPatienceCalorie[];
@@ -32,13 +34,19 @@ class ConvertFoodToCaloriesResponse {
 @injectable()
 @Controller('/daily-patience-calorie')
 export default class DailyPatienceCalorieController {
-  private dailyPatienceCalorieService: IDailyPatienceCalorieService;
+<<<<<<< HEAD
+  private dailyPatienceCalorieService: DailyPatienceCalorieService;
   private openAI: OpenAIService;
 
   constructor(
-    @inject(TYPES.IDailyPatienceCalorieService) dailyPatienceCalorieService: IDailyPatienceCalorieService,
+    @inject(TYPES.DailyPatienceCalorieService) dailyPatienceCalorieService: DailyPatienceCalorieService,
     @inject(TYPES.OpenAIService) openAI: OpenAIService
   ) {
+=======
+  private dailyPatienceCalorieService: IDailyPatienceCalorieService;
+
+  constructor(@inject(TYPES.IDailyPatienceCalorieService) dailyPatienceCalorieService: IDailyPatienceCalorieService) {
+>>>>>>> main
     this.dailyPatienceCalorieService = dailyPatienceCalorieService;
     this.openAI = openAI;
   }

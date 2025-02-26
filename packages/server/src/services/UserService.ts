@@ -1,23 +1,28 @@
-import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
-import UserRepository from '../repositories/UserRepository';
+import IUserRepository from '../interfaces/IUserRepository';
+import IUserService from '../interfaces/IUserService';
+
 import { TYPES } from '../config/types';
 import { User } from '@prisma/client';
 
 @injectable()
-export default class UserService {
-  private userRepository: UserRepository;
+export default class UserService implements IUserService {
+  private userRepository: IUserRepository;
 
-  constructor(@inject(TYPES.UserRepository) userRepository: UserRepository) {
+  constructor(@inject(TYPES.IUserRepository) userRepository: IUserRepository) {
     this.userRepository = userRepository;
   }
 
-  public async GetUser(clientId: string): Promise<User> {
-    return await this.userRepository.FindUserByClientId(clientId);
+  public async GetUser(clientId: string): Promise<User | null> {
+    try {
+      return await this.userRepository.FindUserByClientId(clientId);
+    } catch {
+      return null;
+    }
   }
 
-  public async CreateUser(clientId: string, name: string): Promise<void> {
-    await this.userRepository.CreateUser(clientId, name);
+  public async CreateUser(clientId: string, name: string, weight: number): Promise<void> {
+    await this.userRepository.CreateUser(clientId, name, weight);
   }
 
   public async DeleteUser(clientId: string): Promise<void> {

@@ -1,14 +1,14 @@
+import 'reflect-metadata';
 import { Response } from 'express';
 import { Controller, Res, Post, Body } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
-
-import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieService';
+import DailyPatienceCalorieService from '../services/DailyPatienceCalorieService';
 import OpenAIService from '../services/OpenAIService';
 
 import { TYPES } from '../config/types';
 import { UserClientIdRequest } from '../models/commonRequest';
 import { IsString, IsNotEmpty } from 'class-validator';
-import DailyPatienceCalorie from '../models/DailyPatienceCalorieModel';
+import DailyPatienceCalorie from '../models/DailyPatienceCalorie';
 
 class GetAllCalorieDataResponse {
   allCalorieData!: DailyPatienceCalorie[];
@@ -32,11 +32,11 @@ class ConvertFoodToCaloriesResponse {
 @injectable()
 @Controller('/daily-patience-calorie')
 export default class DailyPatienceCalorieController {
-  private dailyPatienceCalorieService: IDailyPatienceCalorieService;
+  private dailyPatienceCalorieService: DailyPatienceCalorieService;
   private openAI: OpenAIService;
 
   constructor(
-    @inject(TYPES.IDailyPatienceCalorieService) dailyPatienceCalorieService: IDailyPatienceCalorieService,
+    @inject(TYPES.DailyPatienceCalorieService) dailyPatienceCalorieService: DailyPatienceCalorieService,
     @inject(TYPES.OpenAIService) openAI: OpenAIService
   ) {
     this.dailyPatienceCalorieService = dailyPatienceCalorieService;

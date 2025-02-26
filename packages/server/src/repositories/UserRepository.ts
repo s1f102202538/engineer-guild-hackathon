@@ -1,10 +1,10 @@
-import 'reflect-metadata';
 import { injectable } from 'inversify';
 import prisma from '../prisma/client';
 import { User, CaloriesGoal } from '@prisma/client';
+import IUserRepository from '../interfaces/IUserRepository';
 
 @injectable()
-export default class UserRepository {
+export default class UserRepository implements IUserRepository {
   public async FindUserByClientId(clientId: string): Promise<User> {
     const user = await prisma.user.findUnique({ where: { clientId } });
 
@@ -15,14 +15,14 @@ export default class UserRepository {
     return user;
   }
 
-  public async CreateUser(clientId: string, name: string): Promise<void> {
+  public async CreateUser(clientId: string, name: string, weight: number): Promise<void> {
     // user が既に存在しているか確認
     const user = await this.FindUserByClientId(clientId);
     if (user != null) {
       throw new Error('UserRepository:CreateUser: User already exists');
     }
 
-    await prisma.user.create({ data: { clientId, name } });
+    await prisma.user.create({ data: { clientId, name, weight } });
   }
 
   public async DeleteUser(clientId: string): Promise<void> {

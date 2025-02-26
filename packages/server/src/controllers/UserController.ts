@@ -1,12 +1,12 @@
-import 'reflect-metadata';
 import { Response } from 'express';
 import { Controller, Res, Post, Body, Delete } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
-import UserService from '../services/UserService';
+import IUserService from '../interfaces/IUserService';
 
 import { TYPES } from '../config/types';
 import { IsAlpha, IsDate, IsNumber } from 'class-validator';
 import { UserClientIdRequest } from '../models/commonRequest';
+import UserData from '../models/UserData';
 
 class CreateUserRequest {
   @IsAlpha()
@@ -14,6 +14,9 @@ class CreateUserRequest {
 
   @IsAlpha()
   name!: string;
+
+  @IsNumber()
+  weight!: number;
 }
 
 class UpdateCalorieGoalRequest {
@@ -29,25 +32,38 @@ class UpdateCalorieGoalRequest {
 
 class UserCalorieGoalResponse {
   calorieGoal!: number;
+
   deadline!: Date;
+}
+
+class GetUserDataResponse {
+  userData!: UserData | null;
 }
 
 @injectable()
 @Controller('/user')
 export default class UserController {
-  private userService: UserService;
+  private userService: IUserService;
 
-  constructor(@inject(TYPES.UserService) userService: UserService) {
+  constructor(@inject(TYPES.IUserService) userService: IUserService) {
     this.userService = userService;
   }
 
   @Post('/get')
-  async getUserName(@Body() userClientIdRequest: UserClientIdRequest, @Res() response: Response) {
+  async getUserName(@Body() userClientIdRequest: UserClientIdRequest, @Res() response: Response<GetUserDataResponse>) {
     try {
       const { clientId } = userClientIdRequest;
       const user = await this.userService.GetUser(clientId);
 
-      return response.status(200).send({ name: user.name });
+      let userData: UserData | null = null;
+      if (user != null) {
+        userData = {
+          name: user.name,
+          weight: user.weight,
+        } as UserData;
+      }
+
+      return response.status(200).send({ userData });
     } catch (error) {
       console.error('UserController:getUser: ', error);
       return response.status(500);
@@ -57,9 +73,9 @@ export default class UserController {
   @Post('/create')
   async createUser(@Body() createUserRequest: CreateUserRequest, @Res() response: Response) {
     try {
-      const { clientId, name } = createUserRequest;
+      const { clientId, name, weight } = createUserRequest;
 
-      await this.userService.CreateUser(clientId, name);
+      await this.userService.CreateUser(clientId, name, weight);
 
       return response.status(200).send('User created');
     } catch (error) {
