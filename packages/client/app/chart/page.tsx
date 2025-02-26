@@ -11,8 +11,7 @@ const HomePage: React.FC = () => {
   const weeklyTotal = 1000; // 週間合計カロリーの例
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6">
-      <div className="max-w-md mx-auto space-y-4">
+    <div>
         {/* 合計我慢カロリーカード */}
         <TotalCalorieCard totalCalories={totalCaloriesData} />
         {/* 週間減量カロリーカード */}
@@ -26,8 +25,6 @@ const HomePage: React.FC = () => {
 
         {/* Navbar */}
         <Navbar />
-
-      </div>
     </div>
   );
 };
