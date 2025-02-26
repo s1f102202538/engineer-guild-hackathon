@@ -21,7 +21,6 @@ export default class OpenAIService {
         max_tokens: maxTokens,
       });
 
-      // TODO: レスポンスのバリデーション
       return response.data.choices[0].message?.content ?? null;
     } catch (error) {
       console.error('OpenAI:createChatCompletion: Error creating chat completion:', error);
@@ -31,17 +30,47 @@ export default class OpenAIService {
 
   // カロリープロンプトを生成する関数
   private createCaloriePrompt(food: string): string {
-    return `次の食べ物のカロリーを数字だけで答えてください: ${food}`;
+    const prompt = `
+    あなたは優秀な栄養士です。
+    以下の条件を踏まえた上で、${food}のカロリーを教えてください。
+    ・条件
+      ・回答は数値のみであること
+      ・単位はkcalであること
+      ・1人が摂取するカロリー量であること
+      ・人間が摂取可能な範囲内であること
+
+    以下に例をしまします。
+    ・例1
+      ・入力: ごはん
+      ・出力: 168
+    `;
+
+    return prompt;
   }
 
   // 食べないように諭すプロンプトを生成する関数
   private createAdvisePrompt(food: string): string {
-    return `ユーザーが「${food}を食べたい」と言っています。ユーザーが食べないように諭してください。`;
+    const prompt = `
+    あなたは優秀な栄養士かつ心理学者です。
+    以下の条件を踏まえた上で、${food}を食べないように諭してください。
+    ・条件
+      ・相手の気持ちに配慮すること
+      ・長すぎる内容は避けること
+      ・相手が理解しやすい言葉を使うこと
+
+    以下に例を示します。
+    ・例1
+      ・入力: ハンバーガーがどうしても食べたいです。
+      ・出力: ハンバーガーおいしいですよね。でも、今日はヘルシーなものを食べてみませんか？おすすめはサラダです！
+    `;
+
+    return prompt;
   }
 
   //食べ物からカロリーを計算
   public async ConvertFoodToCalories(food: string): Promise<number | null> {
     const prompt = this.createCaloriePrompt(food);
+    // TODO: バリデーション
     const calorieString = await this.createChatCompletion(prompt, 50);
 
     const calories = calorieString ? Number(calorieString) : null;
@@ -52,6 +81,7 @@ export default class OpenAIService {
   public async AdviseAgainstEating(food: string): Promise<string | null> {
     const prompt = this.createAdvisePrompt(food);
 
+    // TODO: バリデーション
     return await this.createChatCompletion(prompt, 50);
   }
 }
