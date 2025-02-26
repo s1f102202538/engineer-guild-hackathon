@@ -15,6 +15,7 @@ class GetAllCalorieDataResponse {
 
 class ConvertFoodToCaloriesRequest {
   food!: string;
+  userId!: string;
 }
 
 class ConvertFoodToCaloriesResponse {
@@ -64,8 +65,10 @@ export default class DailyPatienceCalorieController {
     @Res() response: Response<ConvertFoodToCaloriesResponse>
   ) {
     try {
-      const { food } = convertFoodToCaloriesRequest;
+      const { food, userId } = convertFoodToCaloriesRequest;
       const calories = await this.openAI.ConvertFoodToCalories(food);
+      // カロリーをDBに更新
+      await this.dailyPatienceCalorieService.UpdateCalorie(userId, calories);
 
       return response.status(200).send({ calories });
     } catch (error) {
