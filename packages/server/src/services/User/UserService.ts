@@ -1,8 +1,8 @@
 import { injectable, inject } from 'inversify';
-import IUserRepository from '../interfaces/IUserRepository';
-import IUserService from '../interfaces/IUserService';
+import IUserRepository from '../../repositories/User/IUserRepository';
+import IUserService from './IUserService';
 
-import { TYPES } from '../config/types';
+import { TYPES } from '../../config/types';
 import { User } from '@prisma/client';
 
 @injectable()

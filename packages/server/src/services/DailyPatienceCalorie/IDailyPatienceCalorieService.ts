@@ -1,6 +1,6 @@
 import { DailyPatienceCalorie } from '@prisma/client';
-import { TimeUnit } from '../repositories/DailyPatienceCalorieRepository';
-import { CalorieDataStatistics } from '../models/CalorieDataStatistics';
+import { TimeUnit } from '../../repositories/DailyPatienceCalorie/DailyPatienceCalorieRepository';
+import { CalorieDataStatistics } from '../../models/CalorieDataStatistics';
 
 export default interface IDailyPatienceCalorieService {
   UpdateCalorie(userId: string, updateCalorie: number): Promise<void>;

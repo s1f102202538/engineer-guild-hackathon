@@ -2,8 +2,8 @@ import { Response } from 'express';
 import { Controller, Res, Post, Body, QueryParam } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
 
-import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieService';
-import OpenAIService from '../services/OpenAIService';
+import IDailyPatienceCalorieService from '../services/DailyPatienceCalorie/IDailyPatienceCalorieService';
+import OpenAIService from '../services/OpenAI/OpenAIService';
 
 import { TYPES } from '../config/types';
 import { UserClientIdRequest } from '../models/commonRequest';
@@ -11,7 +11,7 @@ import { IsString, IsNotEmpty } from 'class-validator';
 
 import DailyPatienceCalorieModel from '../models/DailyPatienceCalorieModel';
 import { CalorieDataStatistics } from '../models/CalorieDataStatistics';
-import { TimeUnit } from '../repositories/DailyPatienceCalorieRepository';
+import { TimeUnit } from '../repositories/DailyPatienceCalorie/DailyPatienceCalorieRepository';
 
 class TodayCalorieDataResponse {
   todayCalorieData!: DailyPatienceCalorieModel;

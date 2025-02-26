@@ -1,11 +1,11 @@
 import { injectable, inject } from 'inversify';
-import IDailyPatienceCalorieRepository from '../interfaces/IDailyPatienceCalorieRepository';
-import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieService';
+import IDailyPatienceCalorieRepository from '../../repositories/DailyPatienceCalorie/IDailyPatienceCalorieRepository';
+import IDailyPatienceCalorieService from './IDailyPatienceCalorieService';
 
-import { TYPES } from '../config/types';
+import { TYPES } from '../../config/types';
 import { DailyPatienceCalorie } from '@prisma/client';
-import { TimeUnit } from '../repositories/DailyPatienceCalorieRepository';
-import { CalorieDataStatistics } from '../models/CalorieDataStatistics';
+import { TimeUnit } from '../../repositories/DailyPatienceCalorie/DailyPatienceCalorieRepository';
+import { CalorieDataStatistics } from '../../models/CalorieDataStatistics';
 
 @injectable()
 export default class DailyPatienceCalorieService implements IDailyPatienceCalorieService {

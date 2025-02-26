@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { Controller, Res, Post, Body, Delete } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
-import IUserService from '../interfaces/IUserService';
+import IUserService from '../services/User/IUserService';
 
 import { TYPES } from '../config/types';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';

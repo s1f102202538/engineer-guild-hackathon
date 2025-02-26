@@ -1,9 +1,9 @@
 import { injectable } from 'inversify';
-import prisma from '../prisma/client';
+import prisma from '../../prisma/client';
 import { DailyPatienceCalorie } from '@prisma/client';
-import IDailyPatienceCalorieRepository from '../interfaces/IDailyPatienceCalorieRepository';
+import IDailyPatienceCalorieRepository from './IDailyPatienceCalorieRepository';
 import { startOfDay, subDays } from 'date-fns';
-import { CalorieDataStatistics, PeriodCalorieData } from '../models/CalorieDataStatistics';
+import { CalorieDataStatistics, PeriodCalorieData } from '../../models/CalorieDataStatistics';
 
 export type TimeUnit = 'day' | 'week' | 'month' | 'year';
 

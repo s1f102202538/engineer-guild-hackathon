@@ -1,6 +1,6 @@
 import { DailyPatienceCalorie } from '@prisma/client';
-import { TimeUnit } from '../repositories/DailyPatienceCalorieRepository';
-import { CalorieDataStatistics } from '../models/CalorieDataStatistics';
+import { TimeUnit } from './DailyPatienceCalorieRepository';
+import { CalorieDataStatistics } from '../../models/CalorieDataStatistics';
 
 export default interface IDailyPatienceCalorieRepository {
   FindTodayData(userId: string): Promise<DailyPatienceCalorie | null>;
