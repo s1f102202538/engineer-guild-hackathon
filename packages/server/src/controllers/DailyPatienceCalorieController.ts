@@ -19,7 +19,8 @@ class ConvertFoodToCaloriesRequest {
 }
 
 class ConvertFoodToCaloriesResponse {
-  calories!: number;
+  calories?: number;
+  message?: string;
 }
 
 @injectable()
@@ -67,13 +68,17 @@ export default class DailyPatienceCalorieController {
     try {
       const { food, userId } = convertFoodToCaloriesRequest;
       const calories = await this.openAI.ConvertFoodToCalories(food);
-      // カロリーをDBに更新
-      await this.dailyPatienceCalorieService.UpdateCalorie(userId, calories);
 
-      return response.status(200).send({ calories });
+      if (calories !== null) {
+        // カロリーをDBに更新
+        await this.dailyPatienceCalorieService.UpdateCalorie(userId, calories);
+        return response.status(200).send({ calories });
+      } else {
+        return response.status(400).send({ message: '正しく更新できませんでした' });
+      }
     } catch (error) {
       console.error('DailyPatienceCalorieController:convertFoodToCalories: ', error);
-      return response.status(500);
+      return response.status(500).send({ message: 'サーバーエラーが発生しました' });
     }
   }
 }

@@ -37,12 +37,14 @@ export default class OpenAI {
     return `ユーザーが「${food}を食べたい」と言っています。ユーザーが食べないように諭してください。`;
   }
 
-  public async ConvertFoodToCalories(food: string): Promise<number> {
+  //食べ物からカロリーを計算
+  public async ConvertFoodToCalories(food: string): Promise<number | null> {
     const prompt = this.createCaloriePrompt(food);
     const calorieString = await this.createChatCompletion(prompt, 50);
     const calories = parseInt(calorieString, 10);
     if (isNaN(calories)) {
-      throw new Error('カロリーの変換に失敗しました');
+      console.error('カロリーの数字変換に失敗しました');
+      return null; // エラーが発生した場合はnullを返す
     }
     return calories;
   }
