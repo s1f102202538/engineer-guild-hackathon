@@ -4,6 +4,7 @@ import { useState } from 'react';
 import ChatMessages from './_components/ChatMessages';
 import { ChatInput } from './_components/ChatInput';
 import Navbar from 'app/components/Navbar';
+import Header from 'app/components/Header';
 
 type Message = {
   text: string;
@@ -24,7 +25,7 @@ const ChatPage = () => {
     setMessages((prev) => [
       ...prev,
       {
-        text: '220KCAL分だからすごいワン!!\n〇〇さんの努力ボクが見てるワン!!',
+        text: '220KCAL分だからすごいワン!!\nooさんの努力ボクが見てるワン!!',
         isUser: false,
       },
     ]);
@@ -36,22 +37,21 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#f5f1eb]">
-      <header className="bg-[#4a665e] text-white p-4">
-        <h1 className="text-xl font-bold text-center">チャット</h1>
-      </header>
+    <div>
+      <Header title={'チャット'} />
+      <div className="flex flex-col h-screen bg-beige-100">
+        <ChatMessages messages={messages} />
 
-      <ChatMessages messages={messages} />
+        <ChatInput
+          inputText={inputText}
+          onInputChange={setInputText}
+          onSubmit={handleSubmit}
+          examples={examples}
+          onExampleClick={handleExampleClick}
+        />
 
-      <ChatInput
-        inputText={inputText}
-        onInputChange={setInputText}
-        onSubmit={handleSubmit}
-        examples={examples}
-        onExampleClick={handleExampleClick}
-      />
-
-      <Navbar />
+        <Navbar />
+      </div>
     </div>
   );
 };

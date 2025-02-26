@@ -3,6 +3,7 @@ import TotalCalorieCard from './components/TotalCalorieCard';
 import WeeklyCalorieCard from './components/WeeklyCalorieCard';
 import ReportSection from './components/ReportSection';
 import Navbar from '../components/Navbar';
+import Header from '../components/Header';
 
 const HomePage: React.FC = () => {
   // 例としてのダミーデータ
@@ -11,22 +12,21 @@ const HomePage: React.FC = () => {
   const weeklyTotal = 1000; // 週間合計カロリーの例
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6">
-      <div className="max-w-md mx-auto space-y-4">
-        {/* 合計我慢カロリーカード */}
-        <TotalCalorieCard totalCalories={totalCaloriesData} />
-        {/* 週間減量カロリーカード */}
-        <WeeklyCalorieCard
-          weeklyCalories={weeklyCaloriesData}
-          weeklyTotal={weeklyTotal}
-        />
+    <div>
+      <Header title={'レポート'} />
+      <div className="min-h-screen bg-gray-100 py-6">
+        <div className="max-w-md mx-auto space-y-4">
+          {/* 合計我慢カロリーカード */}
+          <TotalCalorieCard totalCalories={totalCaloriesData} />
+          {/* 週間減量カロリーカード */}
+          <WeeklyCalorieCard weeklyCalories={weeklyCaloriesData} weeklyTotal={weeklyTotal} />
 
-        {/* レポートセクション */}
-        <ReportSection />
+          {/* レポートセクション */}
+          <ReportSection />
 
-        {/* Navbar */}
-        <Navbar />
-
+          {/* Navbar */}
+          <Navbar />
+        </div>
       </div>
     </div>
   );
