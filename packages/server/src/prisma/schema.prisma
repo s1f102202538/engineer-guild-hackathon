@@ -17,9 +17,10 @@ model User {
   id                    String                 @id @default(cuid())
   clientId              String                 @unique
   name                  String
+  weight                Float
+  weightGoal            Float?
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
-  caloriesGoal          CaloriesGoal?
   DailyPatienceCalories DailyPatienceCalorie[]
 }
 
@@ -31,14 +32,4 @@ model DailyPatienceCalorie {
   date      DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model CaloriesGoal {
-  id          Int      @id @default(autoincrement())
-  userId      String   @unique
-  User        User     @relation(fields: [userId], references: [id])
-  calorieGoal Int
-  deadline    DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }

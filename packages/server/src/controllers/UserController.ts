@@ -1,53 +1,65 @@
-import 'reflect-metadata';
 import { Response } from 'express';
 import { Controller, Res, Post, Body, Delete } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
-import UserService from '../services/UserService';
+import IUserService from '../interfaces/IUserService';
 
 import { TYPES } from '../config/types';
-import { IsAlpha, IsDate, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { UserClientIdRequest } from '../models/commonRequest';
+import UserData from '../models/UserData';
 
 class CreateUserRequest {
-  @IsAlpha()
+  @IsString()
+  @IsNotEmpty()
   clientId!: string;
 
-  @IsAlpha()
+  @IsString()
+  @IsNotEmpty()
   name!: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  weight!: number;
 }
 
-class UpdateCalorieGoalRequest {
-  @IsAlpha()
+class UpdateWeightGoalRequest {
+  @IsString()
+  @IsNotEmpty()
   clientId!: string;
 
   @IsNumber()
-  calorieGoal!: number;
-
-  @IsDate()
-  deadline!: Date;
+  @IsNotEmpty()
+  weightGoal!: number;
 }
 
-class UserCalorieGoalResponse {
-  calorieGoal!: number;
-  deadline!: Date;
+class GetUserDataResponse {
+  userData!: UserData | null;
 }
 
 @injectable()
 @Controller('/user')
 export default class UserController {
-  private userService: UserService;
+  private userService: IUserService;
 
-  constructor(@inject(TYPES.UserService) userService: UserService) {
+  constructor(@inject(TYPES.IUserService) userService: IUserService) {
     this.userService = userService;
   }
 
   @Post('/get')
-  async getUserName(@Body() userClientIdRequest: UserClientIdRequest, @Res() response: Response) {
+  async getUserName(@Body() userClientIdRequest: UserClientIdRequest, @Res() response: Response<GetUserDataResponse>) {
     try {
       const { clientId } = userClientIdRequest;
       const user = await this.userService.GetUser(clientId);
 
-      return response.status(200).send({ name: user.name });
+      let userData: UserData | null = null;
+      if (user != null) {
+        userData = {
+          name: user.name,
+          weight: user.weight,
+        } as UserData;
+      }
+
+      return response.status(200).send({ userData });
     } catch (error) {
       console.error('UserController:getUser: ', error);
       return response.status(500);
@@ -57,9 +69,9 @@ export default class UserController {
   @Post('/create')
   async createUser(@Body() createUserRequest: CreateUserRequest, @Res() response: Response) {
     try {
-      const { clientId, name } = createUserRequest;
+      const { clientId, name, weight } = createUserRequest;
 
-      await this.userService.CreateUser(clientId, name);
+      await this.userService.CreateUser(clientId, name, weight);
 
       return response.status(200).send('User created');
     } catch (error) {
@@ -82,28 +94,12 @@ export default class UserController {
     }
   }
 
-  @Post('/get-calorie-goal')
-  async getUserCalorieGoal(
-    @Body() userClientIdRequest: UserClientIdRequest,
-    @Res() response: Response<UserCalorieGoalResponse>
-  ) {
+  @Post('/update-weight-goal')
+  async updateUserWeightGoal(@Body() updateWeightGoalRequest: UpdateWeightGoalRequest, @Res() response: Response) {
     try {
-      const { clientId } = userClientIdRequest;
-      const calorieGoal = await this.userService.GetUserCalorieGoal(clientId);
+      const { clientId, weightGoal } = updateWeightGoalRequest;
 
-      return response.status(200).send({ calorieGoal } as UserCalorieGoalResponse);
-    } catch (error) {
-      console.error('UserController:getUserCalorieGoal: ', error);
-      return response.status(500);
-    }
-  }
-
-  @Post('/update-calorie-goal')
-  async updateUserCalorieGoal(@Body() updateCalorieGoalRequest: UpdateCalorieGoalRequest, @Res() response: Response) {
-    try {
-      const { clientId, calorieGoal, deadline } = updateCalorieGoalRequest;
-
-      await this.userService.UpdateUserCalorieGoal(clientId, calorieGoal, deadline);
+      await this.userService.UpdateUserWeightGoal(clientId, weightGoal);
 
       return response.status(200).send('User calorie goal updated');
     } catch (error) {

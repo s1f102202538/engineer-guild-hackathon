@@ -1,15 +1,16 @@
-import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
-import DailyPatienceCalorieRepository from '../repositories/DailyPatienceCalorieRepository';
+import IDailyPatienceCalorieRepository from '../interfaces/IDailyPatienceCalorieRepository';
+import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieService';
+
 import { TYPES } from '../config/types';
 import { DailyPatienceCalorie } from '@prisma/client';
 
 @injectable()
-export default class DailyPatienceCalorieService {
-  private dailyPatienceCalorieRepository: DailyPatienceCalorieRepository;
+export default class DailyPatienceCalorieService implements IDailyPatienceCalorieService {
+  private dailyPatienceCalorieRepository: IDailyPatienceCalorieRepository;
 
   constructor(
-    @inject(TYPES.DailyPatienceCalorieRepository) dailyPatienceCalorieRepository: DailyPatienceCalorieRepository
+    @inject(TYPES.IDailyPatienceCalorieRepository) dailyPatienceCalorieRepository: IDailyPatienceCalorieRepository
   ) {
     this.dailyPatienceCalorieRepository = dailyPatienceCalorieRepository;
   }
@@ -23,6 +24,16 @@ export default class DailyPatienceCalorieService {
     } else {
       await this.dailyPatienceCalorieRepository.UpdateData(userId, updateCalorie);
     }
+  }
+
+  public async GetTodayCalorieData(userId: string): Promise<DailyPatienceCalorie> {
+    let todayData = await this.dailyPatienceCalorieRepository.FindTodayData(userId);
+
+    if (todayData == null) {
+      todayData = await this.dailyPatienceCalorieRepository.CreateData(userId, 0);
+    }
+
+    return todayData;
   }
 
   public async GetAllCalorieData(userId: string): Promise<DailyPatienceCalorie[]> {
