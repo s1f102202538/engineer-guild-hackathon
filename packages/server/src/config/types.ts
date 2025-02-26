@@ -6,6 +6,8 @@ const TYPES = {
   DailyPatienceCalorieService: Symbol.for('DailyPatienceCalorieService'),
   IDailyPatienceCalorieService: Symbol.for('DailyPatienceCalorieService'),
   DailyPatienceCalorieRepository: Symbol.for('DailyPatienceCalorieRepository'),
+  DailyPatienceCalorieController: Symbol.for('DailyPatienceCalorieController'),
+  OpenAIService: Symbol.for('OpenAIService'),
   IDailyPatienceCalorieRepository: Symbol.for('IDailyPatienceCalorieRepository'),
 };
 

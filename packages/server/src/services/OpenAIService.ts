@@ -2,20 +2,20 @@ import { injectable } from 'inversify';
 import { Configuration, OpenAIApi } from 'openai';
 
 @injectable()
-export default class OpenAI {
-  private openai: OpenAIApi;
+export default class OpenAIService {
+  private openAIService: OpenAIApi;
 
   constructor() {
     const configuration = new Configuration({
       apiKey: `${process.env.OPENAI_API_KEY}`,
     });
-    this.openai = new OpenAIApi(configuration);
+    this.openAIService = new OpenAIApi(configuration);
   }
 
   // chatgpt
   private async createChatCompletion(prompt: string, maxTokens: number): Promise<string> {
     try {
-      const response = await this.openai.createChatCompletion({
+      const response = await this.openAIService.createChatCompletion({
         model: 'gpt-4',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: maxTokens,
@@ -37,12 +37,14 @@ export default class OpenAI {
     return `ユーザーが「${food}を食べたい」と言っています。ユーザーが食べないように諭してください。`;
   }
 
-  public async ConvertFoodToCalories(food: string): Promise<number> {
+  //食べ物からカロリーを計算
+  public async ConvertFoodToCalories(food: string): Promise<number | null> {
     const prompt = this.createCaloriePrompt(food);
     const calorieString = await this.createChatCompletion(prompt, 50);
     const calories = parseInt(calorieString, 10);
     if (isNaN(calories)) {
-      throw new Error('カロリーの変換に失敗しました');
+      console.error('カロリーの数字変換に失敗しました');
+      return null; // エラーが発生した場合はnullを返す
     }
     return calories;
   }
