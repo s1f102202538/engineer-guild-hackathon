@@ -4,6 +4,8 @@ import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieSer
 
 import { TYPES } from '../config/types';
 import { DailyPatienceCalorie } from '@prisma/client';
+import { TimeUnit } from '../repositories/DailyPatienceCalorieRepository';
+import { CalorieDataStatistics } from '../models/CalorieDataStatistics';
 
 @injectable()
 export default class DailyPatienceCalorieService implements IDailyPatienceCalorieService {
@@ -40,5 +42,9 @@ export default class DailyPatienceCalorieService implements IDailyPatienceCalori
     }
 
     return todayData;
+  }
+
+  public async GetCalorieDataStatistics(userId: string, timeUnit: TimeUnit): Promise<CalorieDataStatistics> {
+    return this.dailyPatienceCalorieRepository.AggregateCalorieData(userId, timeUnit);
   }
 }

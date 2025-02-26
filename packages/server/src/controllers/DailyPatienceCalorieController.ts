@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Controller, Res, Post, Body } from 'routing-controllers';
+import { Controller, Res, Post, Body, QueryParam } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
 
 import IDailyPatienceCalorieService from '../interfaces/IDailyPatienceCalorieService';
@@ -10,18 +10,16 @@ import { UserClientIdRequest } from '../models/commonRequest';
 import { IsString, IsNotEmpty } from 'class-validator';
 
 import DailyPatienceCalorieModel from '../models/DailyPatienceCalorieModel';
+import { CalorieDataStatistics } from '../models/CalorieDataStatistics';
+import { TimeUnit } from '../repositories/DailyPatienceCalorieRepository';
 
 class TodayCalorieDataResponse {
   todayCalorieData!: DailyPatienceCalorieModel;
 }
 
-// class CalorieDataStatisticsResponse {
-//   totalCalories!: number;
-
-//   averageCalories!: number;
-
-//   startDate!: Date;
-// }
+class CalorieDataStatisticsResponse {
+  calorieDataStatistics!: CalorieDataStatistics;
+}
 
 class UploadFoodRequest {
   @IsString()
@@ -90,53 +88,20 @@ export default class DailyPatienceCalorieController {
     }
   }
 
-  /*
-  @Post('/get-daily-statistics')
+  @Post('/get-calorie-data-statistics/:timeUnit')
   async getDailyStatistics(
+    @QueryParam('timeUnit') timeUnit: TimeUnit,
     @Body() userClientIdRequest: UserClientIdRequest,
     @Res() response: Response<CalorieDataStatisticsResponse>
   ) {
     try {
-    } catch (error) {
-      console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
-      return response.status(500);
-    }
-  }
+      const { clientId } = userClientIdRequest;
+      const data = await this.dailyPatienceCalorieService.GetCalorieDataStatistics(clientId, timeUnit);
 
-  @Post('/get-weekly-statistics')
-  async getWeeklyStatistics(
-    @Body() userClientIdRequest: UserClientIdRequest,
-    @Res() response: Response<CalorieDataStatisticsResponse>
-  ) {
-    try {
+      return response.status(200).send({ calorieDataStatistics: data });
     } catch (error) {
       console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
       return response.status(500);
     }
   }
-
-  @Post('/get-monthly-statistics')
-  async getMonthlyStatistics(
-    @Body() userClientIdRequest: UserClientIdRequest,
-    @Res() response: Response<CalorieDataStatisticsResponse>
-  ) {
-    try {
-    } catch (error) {
-      console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
-      return response.status(500);
-    }
-  }
-
-  @Post('/get-yearly-statistics')
-  async getYearlyStatistics(
-    @Body() userClientIdRequest: UserClientIdRequest,
-    @Res() response: Response<CalorieDataStatisticsResponse>
-  ) {
-    try {
-    } catch (error) {
-      console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
-      return response.status(500);
-    }
-  }
-  */
 }
