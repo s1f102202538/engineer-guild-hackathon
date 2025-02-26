@@ -1,35 +1,18 @@
 'use client';
 
-import { useState } from 'react';
 import ChatMessages from './_components/ChatMessages';
 import { ChatInput } from './_components/ChatInput';
+import { useUser, useAuth } from '@clerk/nextjs';
 import Navbar from 'app/components/Navbar';
-
-type Message = {
-  text: string;
-  isUser: boolean;
-};
+import { useChat } from 'app/hooks/useChat';
 
 const ChatPage = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState('');
-
+  const { user } = useUser();
+  const { userId } = useAuth();
+  const { messages, inputText, setInputText, handleSubmit } = useChat(userId || '');
   const examples = ['お菓子を食べたい', 'お腹すいた', '夜食食べようか迷う'];
-
-  // バックエンドとの処理を金融
-  const handleSubmit = () => {
-    if (!inputText.trim()) return;
-
-    setMessages([...messages, { text: inputText, isUser: true }]);
-    setMessages((prev) => [
-      ...prev,
-      {
-        text: '220KCAL分だからすごいワン!!\n〇〇さんの努力ボクが見てるワン!!',
-        isUser: false,
-      },
-    ]);
-    setInputText('');
-  };
+  console.log('userId', userId);
+  console.log('user', user);
 
   const handleExampleClick = (example: string) => {
     setInputText(example);
