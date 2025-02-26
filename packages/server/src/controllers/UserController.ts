@@ -4,29 +4,35 @@ import { injectable, inject } from 'inversify';
 import IUserService from '../interfaces/IUserService';
 
 import { TYPES } from '../config/types';
-import { IsAlpha, IsDate, IsNumber } from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { UserClientIdRequest } from '../models/commonRequest';
 import UserData from '../models/UserData';
 
 class CreateUserRequest {
-  @IsAlpha()
+  @IsString()
+  @IsNotEmpty()
   clientId!: string;
 
-  @IsAlpha()
+  @IsString()
+  @IsNotEmpty()
   name!: string;
 
   @IsNumber()
+  @IsNotEmpty()
   weight!: number;
 }
 
 class UpdateCalorieGoalRequest {
-  @IsAlpha()
+  @IsString()
+  @IsNotEmpty()
   clientId!: string;
 
   @IsNumber()
+  @IsNotEmpty()
   calorieGoal!: number;
 
   @IsDate()
+  @IsNotEmpty()
   deadline!: Date;
 }
 

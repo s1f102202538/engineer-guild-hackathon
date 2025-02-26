@@ -1,6 +1,7 @@
-import { IsAlpha } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class UserClientIdRequest {
-  @IsAlpha()
+  @IsString()
+  @IsNotEmpty()
   clientId!: string;
 }
