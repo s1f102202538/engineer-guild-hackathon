@@ -13,17 +13,7 @@ export default class DailyPatienceCalorieRepository implements IDailyPatienceCal
     const data = await prisma.dailyPatienceCalorie.findFirst({
       where: {
         userId,
-        createdAt: today,
-      },
-    });
-
-    return data;
-  }
-
-  public async FindAllData(userId: string): Promise<DailyPatienceCalorie[]> {
-    const data = await prisma.dailyPatienceCalorie.findMany({
-      where: {
-        userId,
+        date: today,
       },
     });
 

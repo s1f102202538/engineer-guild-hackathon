@@ -11,9 +11,17 @@ import { IsString, IsNotEmpty } from 'class-validator';
 
 import DailyPatienceCalorieModel from '../models/DailyPatienceCalorieModel';
 
-class DailyCalorieDataResponse {
+class TodayCalorieDataResponse {
   todayCalorieData!: DailyPatienceCalorieModel;
 }
+
+// class CalorieDataStatisticsResponse {
+//   totalCalories!: number;
+
+//   averageCalories!: number;
+
+//   startDate!: Date;
+// }
 
 class UploadFoodRequest {
   @IsString()
@@ -46,7 +54,7 @@ export default class DailyPatienceCalorieController {
   @Post('/get-today-calorie-data')
   async getDailyCalorieData(
     @Body() userClientIdRequest: UserClientIdRequest,
-    @Res() response: Response<DailyCalorieDataResponse>
+    @Res() response: Response<TodayCalorieDataResponse>
   ) {
     try {
       const { clientId } = userClientIdRequest;
@@ -81,4 +89,54 @@ export default class DailyPatienceCalorieController {
       return response.status(500);
     }
   }
+
+  /*
+  @Post('/get-daily-statistics')
+  async getDailyStatistics(
+    @Body() userClientIdRequest: UserClientIdRequest,
+    @Res() response: Response<CalorieDataStatisticsResponse>
+  ) {
+    try {
+    } catch (error) {
+      console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
+      return response.status(500);
+    }
+  }
+
+  @Post('/get-weekly-statistics')
+  async getWeeklyStatistics(
+    @Body() userClientIdRequest: UserClientIdRequest,
+    @Res() response: Response<CalorieDataStatisticsResponse>
+  ) {
+    try {
+    } catch (error) {
+      console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
+      return response.status(500);
+    }
+  }
+
+  @Post('/get-monthly-statistics')
+  async getMonthlyStatistics(
+    @Body() userClientIdRequest: UserClientIdRequest,
+    @Res() response: Response<CalorieDataStatisticsResponse>
+  ) {
+    try {
+    } catch (error) {
+      console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
+      return response.status(500);
+    }
+  }
+
+  @Post('/get-yearly-statistics')
+  async getYearlyStatistics(
+    @Body() userClientIdRequest: UserClientIdRequest,
+    @Res() response: Response<CalorieDataStatisticsResponse>
+  ) {
+    try {
+    } catch (error) {
+      console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
+      return response.status(500);
+    }
+  }
+  */
 }

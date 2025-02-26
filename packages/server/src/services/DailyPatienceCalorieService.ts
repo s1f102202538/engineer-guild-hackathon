@@ -41,8 +41,4 @@ export default class DailyPatienceCalorieService implements IDailyPatienceCalori
 
     return todayData;
   }
-
-  public async GetAllCalorieData(userId: string): Promise<DailyPatienceCalorie[]> {
-    return await this.dailyPatienceCalorieRepository.FindAllData(userId);
-  }
 }
