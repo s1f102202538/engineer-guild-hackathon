@@ -16,8 +16,8 @@ export default class UserService {
     return await this.userRepository.FindUserByClientId(clientId);
   }
 
-  public async CreateUser(clientId: string, name: string): Promise<void> {
-    await this.userRepository.CreateUser(clientId, name);
+  public async CreateUser(clientId: string, name: string, weight: number): Promise<void> {
+    await this.userRepository.CreateUser(clientId, name, weight);
   }
 
   public async DeleteUser(clientId: string): Promise<void> {
