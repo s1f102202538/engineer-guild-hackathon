@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { Controller, Res, Post, Body } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
 import DailyPatienceCalorieService from '../services/DailyPatienceCalorieService';
-import OpenAI from '../services/OpenAI';
+import OpenAIService from '../services/OpenAIService';
 
 import { TYPES } from '../config/types';
 import { UserClientIdRequest } from '../models/commonRequest';
@@ -27,11 +27,11 @@ class ConvertFoodToCaloriesResponse {
 @Controller('/daily-patience-calorie')
 export default class DailyPatienceCalorieController {
   private dailyPatienceCalorieService: DailyPatienceCalorieService;
-  private openAI: OpenAI;
+  private openAI: OpenAIService;
 
   constructor(
     @inject(TYPES.DailyPatienceCalorieService) dailyPatienceCalorieService: DailyPatienceCalorieService,
-    openAI: OpenAI
+    openAI: OpenAIService
   ) {
     this.dailyPatienceCalorieService = dailyPatienceCalorieService;
     this.openAI = openAI;
@@ -60,7 +60,7 @@ export default class DailyPatienceCalorieController {
     }
   }
 
-  @Post('/convert-food-to-calories')
+  @Post('/upload-food')
   async convertFoodToCalories(
     @Body() convertFoodToCaloriesRequest: ConvertFoodToCaloriesRequest,
     @Res() response: Response<ConvertFoodToCaloriesResponse>

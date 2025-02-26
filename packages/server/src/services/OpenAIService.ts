@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import { Configuration, OpenAIApi } from 'openai';
 
 @injectable()
-export default class OpenAI {
+export default class OpenAIService {
   private openai: OpenAIApi;
 
   constructor() {
