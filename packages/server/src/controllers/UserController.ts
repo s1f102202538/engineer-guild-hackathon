@@ -7,6 +7,7 @@ import UserService from '../services/UserService';
 import { TYPES } from '../config/types';
 import { IsAlpha, IsDate, IsNumber } from 'class-validator';
 import { UserClientIdRequest } from '../models/commonRequest';
+import UserData from '../models/UserData';
 
 class CreateUserRequest {
   @IsAlpha()
@@ -37,9 +38,7 @@ class UserCalorieGoalResponse {
 }
 
 class GetUserDataResponse {
-  name!: string;
-
-  weight!: number;
+  userData!: UserData | null;
 }
 
 @injectable()
@@ -57,12 +56,15 @@ export default class UserController {
       const { clientId } = userClientIdRequest;
       const user = await this.userService.GetUser(clientId);
 
-      const userData = {
-        name: user.name,
-        weight: user.weight,
-      } as GetUserDataResponse;
+      let userData: UserData | null = null;
+      if (user != null) {
+        userData = {
+          name: user.name,
+          weight: user.weight,
+        } as UserData;
+      }
 
-      return response.status(200).send(userData);
+      return response.status(200).send({ userData });
     } catch (error) {
       console.error('UserController:getUser: ', error);
       return response.status(500);
