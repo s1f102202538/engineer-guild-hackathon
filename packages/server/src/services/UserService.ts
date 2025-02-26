@@ -13,34 +13,39 @@ export default class UserService implements IUserService {
     this.userRepository = userRepository;
   }
 
-  public async GetUser(clientId: string): Promise<User | null> {
-    try {
-      return await this.userRepository.FindUserByClientId(clientId);
-    } catch {
-      return null;
+  public async GetUser(clientId: string): Promise<User> {
+    const user = await this.userRepository.FindUserByClientId(clientId);
+    if (user == null) {
+      throw new Error('UserRepository:FindUserByClientId: User not found');
     }
+
+    return user;
   }
 
   public async CreateUser(clientId: string, name: string, weight: number): Promise<void> {
+    // user が既に存在しているか確認
+    const user = await this.userRepository.FindUserByClientId(clientId);
+    if (user != null) {
+      throw new Error('UserService:CreateUser: User already exists');
+    }
+
     await this.userRepository.CreateUser(clientId, name, weight);
   }
 
   public async DeleteUser(clientId: string): Promise<void> {
-    await this.userRepository.DeleteUser(clientId);
-  }
-
-  public async GetUserCalorieGoal(clientId: string): Promise<number> {
-    const calorieGoal = await this.userRepository.FindUserCalorieGoal(clientId);
-    return calorieGoal.calorieGoal;
-  }
-
-  public async UpdateUserCalorieGoal(clientId: string, calorieGoal: number, deadline: Date): Promise<void> {
-    const calorieGoalData = await this.userRepository.FindUserCalorieGoal(clientId);
-
-    if (calorieGoalData == null) {
-      await this.userRepository.CreateUserCalorieGoal(clientId, calorieGoal, deadline);
-    } else {
-      await this.userRepository.UpdateUserCalorieGoal(calorieGoalData.id, calorieGoal, deadline);
+    try {
+      await this.userRepository.DeleteUser(clientId);
+    } catch {
+      throw new Error('UserService:DeleteUser: User not found or failed to delete');
     }
+  }
+
+  public async UpdateUserWeightGoal(clientId: string, weightGoal: number): Promise<void> {
+    const user = await this.userRepository.FindUserByClientId(clientId);
+    if (user == null) {
+      throw new Error('UserService:UpdateUserWeightGoal: User not found');
+    }
+
+    await this.userRepository.UpdateUserWeightGoal(user.id, weightGoal);
   }
 }

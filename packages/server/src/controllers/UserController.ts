@@ -4,7 +4,7 @@ import { injectable, inject } from 'inversify';
 import IUserService from '../interfaces/IUserService';
 
 import { TYPES } from '../config/types';
-import { IsDate, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { UserClientIdRequest } from '../models/commonRequest';
 import UserData from '../models/UserData';
 
@@ -22,24 +22,14 @@ class CreateUserRequest {
   weight!: number;
 }
 
-class UpdateCalorieGoalRequest {
+class UpdateWeightGoalRequest {
   @IsString()
   @IsNotEmpty()
   clientId!: string;
 
   @IsNumber()
   @IsNotEmpty()
-  calorieGoal!: number;
-
-  @IsDate()
-  @IsNotEmpty()
-  deadline!: Date;
-}
-
-class UserCalorieGoalResponse {
-  calorieGoal!: number;
-
-  deadline!: Date;
+  weightGoal!: number;
 }
 
 class GetUserDataResponse {
@@ -104,28 +94,12 @@ export default class UserController {
     }
   }
 
-  @Post('/get-calorie-goal')
-  async getUserCalorieGoal(
-    @Body() userClientIdRequest: UserClientIdRequest,
-    @Res() response: Response<UserCalorieGoalResponse>
-  ) {
+  @Post('/update-weight-goal')
+  async updateUserWeightGoal(@Body() updateWeightGoalRequest: UpdateWeightGoalRequest, @Res() response: Response) {
     try {
-      const { clientId } = userClientIdRequest;
-      const calorieGoal = await this.userService.GetUserCalorieGoal(clientId);
+      const { clientId, weightGoal } = updateWeightGoalRequest;
 
-      return response.status(200).send({ calorieGoal } as UserCalorieGoalResponse);
-    } catch (error) {
-      console.error('UserController:getUserCalorieGoal: ', error);
-      return response.status(500);
-    }
-  }
-
-  @Post('/update-calorie-goal')
-  async updateUserCalorieGoal(@Body() updateCalorieGoalRequest: UpdateCalorieGoalRequest, @Res() response: Response) {
-    try {
-      const { clientId, calorieGoal, deadline } = updateCalorieGoalRequest;
-
-      await this.userService.UpdateUserCalorieGoal(clientId, calorieGoal, deadline);
+      await this.userService.UpdateUserWeightGoal(clientId, weightGoal);
 
       return response.status(200).send('User calorie goal updated');
     } catch (error) {
