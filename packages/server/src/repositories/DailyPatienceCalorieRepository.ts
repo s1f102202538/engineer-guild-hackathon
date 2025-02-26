@@ -42,6 +42,7 @@ export default class DailyPatienceCalorieRepository implements IDailyPatienceCal
     await prisma.dailyPatienceCalorie.update({ where: { id }, data: { calories: updateCalories } });
   }
 
+  // 1年前までのデータを集計
   public async AggregateCalorieData(userId: string, timeUnit: TimeUnit): Promise<CalorieDataStatistics> {
     try {
       const today = startOfDay(new Date());
