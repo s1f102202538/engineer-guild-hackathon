@@ -37,7 +37,7 @@ export default class DailyPatienceCalorieController {
 
   constructor(
     @inject(TYPES.DailyPatienceCalorieService) dailyPatienceCalorieService: DailyPatienceCalorieService,
-    openAI: OpenAIService
+    @inject(TYPES.OpenAIService) openAI: OpenAIService
   ) {
     this.dailyPatienceCalorieService = dailyPatienceCalorieService;
     this.openAI = openAI;
