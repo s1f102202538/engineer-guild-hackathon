@@ -1,13 +1,13 @@
 import { Button } from 'app/components/ui/button';
 import { Input } from 'app/components/ui/input';
 
-interface ChatInputProps {
+type ChatInputProps = {
   inputText: string;
   onInputChange: (text: string) => void;
   onSubmit: () => void;
   examples: string[];
   onExampleClick: (example: string) => void;
-}
+};
 
 export const ChatInput = ({ inputText, onInputChange, onSubmit, examples, onExampleClick }: ChatInputProps) => {
   return (

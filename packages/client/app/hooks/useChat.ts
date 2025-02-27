@@ -10,6 +10,10 @@ export const useChat = (userId: string) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
 
+  console.log('userId確認します', userId);
+  console.log('messages確認します', messages);
+  console.log('inputText確認します', inputText);
+
   useEffect(() => {
     const fetchChatLog = async () => {
       try {
@@ -42,12 +46,13 @@ export const useChat = (userId: string) => {
     if (!inputText.trim()) return;
 
     const clientId = userId;
-
+    console.log('clientIdデーーーーーーす', typeof clientId);
+    console.log('inputTextデーーーーーーす', typeof inputText);
     setMessages([...messages, { text: inputText, isUser: true }]);
 
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/chat/persuade-user`, {
-        clientId,
+        clientId: clientId,
         message: inputText,
       });
 

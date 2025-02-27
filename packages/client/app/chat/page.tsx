@@ -12,6 +12,8 @@ import axios from 'axios';
 const ChatPage = () => {
   const { user } = useUser();
   const { userId } = useAuth();
+  console.log('user', user);
+  console.log('userId確認します', userId);
   const { messages, inputText, setInputText, handleSubmit } = useChat(userId || '');
   const examples = ['お菓子を食べたい', 'お腹すいた', '夜食食べようか迷う'];
 
