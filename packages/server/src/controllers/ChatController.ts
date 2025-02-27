@@ -56,10 +56,10 @@ export default class ChatController {
       // AIの出力したログを保存
       await this.openAIService.SaveChatLog(user.id, responseMessage, true);
 
-      response.status(200).send({ message: responseMessage });
+      return response.status(200).send({ message: responseMessage });
     } catch (error) {
       console.error('ChatController:persuadeUser: ', error);
-      response.status(500);
+      return response.status(500);
     }
   }
 
@@ -74,10 +74,10 @@ export default class ChatController {
       const user = await this.userService.GetUser(clientId);
 
       const chatLogs = await this.openAIService.GetChatLog(user.id, maxTake);
-      response.status(200).send({ chatLogs });
+      return response.status(200).send({ chatLogs });
     } catch (error) {
       console.error('ChatController:getChatLog: ', error);
-      response.status(500);
+      return response.status(500);
     }
   }
 
