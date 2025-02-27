@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, ChartNoAxesCombined, Settings } from 'lucide-react';
+import { Home, PawPrint, ChartNoAxesCombined } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import { usePathname } from 'next/navigation';
@@ -18,11 +18,11 @@ const Navbar = () => {
       <Link href="/home" className={linkClasses('/home')}>
         <Home className="h-6 w-6" />
       </Link>
-      <Link href="/report" className={linkClasses('/report')} aria-label="Menu">
-        <ChartNoAxesCombined className="h-6 w-6" />
+      <Link href="/chat" className={linkClasses('/chat')} aria-label="Menu">
+        <PawPrint className="h-6 w-6" />
       </Link>
-      <Link href="/settings" className={linkClasses('/settings')} aria-label="Notifications">
-        <Settings className="h-6 w-6" />
+      <Link href="/chart" className={linkClasses('/settings')} aria-label="Notifications">
+        <ChartNoAxesCombined className="h-6 w-6" />
       </Link>
     </nav>
   );

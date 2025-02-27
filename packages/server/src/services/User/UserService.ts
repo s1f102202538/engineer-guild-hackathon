@@ -16,7 +16,7 @@ export default class UserService implements IUserService {
   public async GetUser(clientId: string): Promise<User> {
     const user = await this.userRepository.FindUserByClientId(clientId);
     if (user == null) {
-      throw new Error('UserRepository:FindUserByClientId: User not found');
+      throw new Error('UserService:GetUser: User not found');
     }
 
     return user;
@@ -47,5 +47,14 @@ export default class UserService implements IUserService {
     }
 
     await this.userRepository.UpdateUserWeightGoal(user.id, weightGoal);
+  }
+
+  public async UpdateUserWeight(clientId: string, weight: number): Promise<void> {
+    const user = await this.userRepository.FindUserByClientId(clientId);
+    if (user == null) {
+      throw new Error('UserService:UpdateUserWeight: User not found');
+    }
+
+    await this.userRepository.UpdateUserWeight(user.id, weight);
   }
 }

@@ -7,9 +7,11 @@ import Navbar from '../components/Navbar';
 import ClientProvider from '../components/ClientProvider';
 import Comment from './_components/Comment';
 import AddEndureCalories from './_components/AddEndureCalories';
+import Header from '../components/Header';
 
 const Page = () => {
   return (
+<<<<<<< HEAD
     <ClientProvider>
     <div className="w-full mx-auto h-screen bg-beige-100 flex flex-col relative text-black">
       <main className="flex-1 px-4 pt-4 pb-16 space-y-4 overflow-hidden">
@@ -19,6 +21,19 @@ const Page = () => {
         <AddEndureCalories />
       </main>
       <Navbar />
+=======
+    <div>
+      <Header title="home" />
+      <div className="w-full mx-auto h-screen bg-beige-100 flex flex-col relative text-black">
+        <main className="flex-1 px-4 pt-4 pb-16 space-y-4 overflow-hidden">
+          <CheckWeight />
+          <EndureCalories />
+          <Comment />
+          <AddEndureCalories />
+        </main>
+        <Navbar />
+      </div>
+>>>>>>> main
     </div>
     </ClientProvider>
   );

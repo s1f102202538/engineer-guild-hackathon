@@ -7,6 +7,7 @@ import { TYPES } from '../config/types';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { UserClientIdRequest } from '../models/commonRequest';
 import UserData from '../models/UserData';
+import logger from '../config/logger';
 
 class CreateUserRequest {
   @IsString()
@@ -30,6 +31,16 @@ class UpdateWeightGoalRequest {
   @IsNumber()
   @IsNotEmpty()
   weightGoal!: number;
+}
+
+class UpdateWeightRequest {
+  @IsString()
+  @IsNotEmpty()
+  clientId!: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  weight!: number;
 }
 
 class GetUserDataResponse {
@@ -56,12 +67,13 @@ export default class UserController {
         userData = {
           name: user.name,
           weight: user.weight,
+          weightGoal: user.weightGoal,
         } as UserData;
       }
 
       return response.status(200).send({ userData });
     } catch (error) {
-      console.error('UserController:getUser: ', error);
+      logger.error('UserController:getUser: ', error);
       return response.status(500);
     }
   }
@@ -75,7 +87,7 @@ export default class UserController {
 
       return response.status(200).send('User created');
     } catch (error) {
-      console.error('UserController:createUser: ', error);
+      logger.error('UserController:createUser: ', error);
       return response.status(500);
     }
   }
@@ -89,7 +101,7 @@ export default class UserController {
 
       return response.status(200).send('User deleted');
     } catch (error) {
-      console.error('UserController:deleteUser: ', error);
+      logger.error('UserController:deleteUser: ', error);
       return response.status(500);
     }
   }
@@ -103,7 +115,21 @@ export default class UserController {
 
       return response.status(200).send('User calorie goal updated');
     } catch (error) {
-      console.error('UserController:updateUserCalorieGoal: ', error);
+      logger.error('UserController:updateUserCalorieGoal: ', error);
+      return response.status(500);
+    }
+  }
+
+  @Post('/update-weight')
+  async updateUserWeight(@Body() updateWeightRequest: UpdateWeightRequest, @Res() response: Response) {
+    try {
+      const { clientId, weight } = updateWeightRequest;
+
+      await this.userService.UpdateUserWeight(clientId, weight);
+
+      return response.status(200).send('User weight updated');
+    } catch (error) {
+      logger.error('UserController:updateUserWeight: ', error);
       return response.status(500);
     }
   }

@@ -20,4 +20,8 @@ export default class UserRepository implements IUserRepository {
   public async UpdateUserWeightGoal(id: string, weightGoal: number): Promise<void> {
     await prisma.user.update({ where: { id }, data: { weightGoal } });
   }
+
+  public async UpdateUserWeight(id: string, weight: number): Promise<void> {
+    await prisma.user.update({ where: { id }, data: { weight } });
+  }
 }

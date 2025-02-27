@@ -3,7 +3,9 @@ import { ChatLog } from '@prisma/client';
 export default interface IOpenAIService {
   ConvertFoodToCalories(food: string): Promise<number | null>;
 
-  AdviseAgainstEating(food: string): Promise<string>;
+  AdviseAgainstEating(userId: string, message: string): Promise<string>;
+
+  PraiseCaloriePatience(calories: number): Promise<string>;
 
   SaveChatLog(userId: string, message: string, isAI: boolean): Promise<void>;
 

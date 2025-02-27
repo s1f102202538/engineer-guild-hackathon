@@ -4,6 +4,7 @@ import { DailyPatienceCalorie } from '@prisma/client';
 import IDailyPatienceCalorieRepository from './IDailyPatienceCalorieRepository';
 import { startOfDay, subDays } from 'date-fns';
 import { CalorieDataStatistics, PeriodCalorieData } from '../../models/CalorieDataStatistics';
+import logger from '../../config/logger';
 
 export type TimeUnit = 'day' | 'week' | 'month' | 'year';
 
@@ -73,7 +74,7 @@ export default class DailyPatienceCalorieRepository implements IDailyPatienceCal
 
       return { periodCalorieData, averageCalories };
     } catch (error) {
-      console.error('DailyPatienceCalorieRepository:AggregateCalorieData: ', error);
+      logger.error('DailyPatienceCalorieRepository:AggregateCalorieData: ', error);
       throw new Error(
         `DailyPatienceCalorieRepository:AggregateCalorieData Failed to aggregate ${timeUnit} calorie data}`
       );
