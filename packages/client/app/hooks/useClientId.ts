@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const useClientId = () => {
   const { userId } = useAuth();
