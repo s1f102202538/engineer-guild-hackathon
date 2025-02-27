@@ -8,6 +8,10 @@ export type UserData = {
   weightGoal: number;
 };
 
+type GetTotalPatienceCaloriesResponse = {
+  totalPatienceCalories: number;
+};
+
 export default class UserService {
   private static readonly baseUrl = `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/user`;
 
@@ -57,5 +61,17 @@ export default class UserService {
     if (response.status !== 200) {
       throw new Error('UserService:updateWeight: status is not 200');
     }
+  }
+
+  public static async GetTotalPatienceCalories(clientId: string): Promise<number> {
+    const url = `${this.baseUrl}/get-total-patience-calories`;
+    const body = { clientId } as UserClientIdRequest;
+    const response = await axios.post<GetTotalPatienceCaloriesResponse>(url, body);
+
+    if (response.status !== 200) {
+      throw new Error('UserService:getTotalPatienceCalories: status is not 200');
+    }
+
+    return response.data.totalPatienceCalories;
   }
 }
