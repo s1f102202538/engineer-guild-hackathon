@@ -19,17 +19,25 @@ const format = (tokens: TokenIndexer, req: IncomingMessage, res: ServerResponse)
   };
 };
 
-const stream = {
-  write: (message: string) => {
-    try {
-      const logData = JSON.parse(message.trim());
-      logger.info(logData);
-    } catch {
-      logger.info(message.trim());
-    }
+const morganMiddleware = morgan(
+  (tokens, req, res) => {
+    const logData = format(tokens, req, res);
+    return JSON.stringify(logData);
   },
-};
-
-const morganMiddleware = morgan(JSON.stringify(format), { stream });
+  {
+    stream: {
+      write: (message: string) => {
+        try {
+          const logData = JSON.parse(message);
+          logger.info('Access Log:', {
+            message: JSON.stringify(logData, null, 2),
+          });
+        } catch {
+          logger.error('Parse Error', { message });
+        }
+      },
+    },
+  }
+);
 
 export default morganMiddleware;

@@ -12,7 +12,6 @@ export const useChat = (userId: string) => {
 
   console.log('userId確認します', userId);
   console.log('messages確認します', messages);
-  console.log('inputText確認します', inputText);
 
   useEffect(() => {
     const fetchChatLog = async () => {

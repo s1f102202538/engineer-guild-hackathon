@@ -8,6 +8,7 @@ import ChatLogModel from '../models/ChatLogModel';
 import { UserClientIdRequest } from '../models/commonRequest';
 import { TYPES } from '../config/types';
 import { IsNotEmpty, IsString } from 'class-validator';
+import logger from '../config/logger';
 
 class PersuadeRequest {
   @IsString()
@@ -34,10 +35,10 @@ export default class ChatController {
   private userService: IUserService;
 
   constructor(
-    @inject(TYPES.OpenAIService) openAI: IOpenAIService,
+    @inject(TYPES.IOpenAIService) openAIService: IOpenAIService,
     @inject(TYPES.IUserService) userService: IUserService
   ) {
-    this.openAIService = openAI;
+    this.openAIService = openAIService;
     this.userService = userService;
   }
 
@@ -45,6 +46,9 @@ export default class ChatController {
   async persuadeUser(@Body() persuadeRequest: PersuadeRequest, @Res() response: Response<PersuadeResponse>) {
     try {
       const { clientId, message } = persuadeRequest;
+
+      logger.info('clientId: ' + clientId);
+      logger.info('message: ' + message);
 
       const user = await this.userService.GetUser(clientId);
 
@@ -58,7 +62,7 @@ export default class ChatController {
 
       return response.status(200).send({ message: responseMessage });
     } catch (error) {
-      console.error('ChatController:persuadeUser: ', error);
+      logger.error('ChatController:persuadeUser: ', error);
       return response.status(500);
     }
   }
@@ -76,7 +80,7 @@ export default class ChatController {
       const chatLogs = await this.openAIService.GetChatLog(user.id, maxTake);
       return response.status(200).send({ chatLogs });
     } catch (error) {
-      console.error('ChatController:getChatLog: ', error);
+      logger.error('ChatController:getChatLog: ', error);
       return response.status(500);
     }
   }
