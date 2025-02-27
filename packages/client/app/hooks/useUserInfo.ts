@@ -1,8 +1,10 @@
+// packages/client/app/hooks/useUserInfo.ts
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-type UserInfo = {
+export type UserInfo = {
   name: string;
+  weight: number;
 };
 
 const useUserInfo = (userId: string) => {
@@ -11,11 +13,13 @@ const useUserInfo = (userId: string) => {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    // user/get
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.post<{ name: string }>('user/get', { clientId: userId });
-        setUserInfo(response.data);
+        const response = await axios.post<{ userData: UserInfo }>(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/user/get`,
+          { clientId: userId }
+        );
+        setUserInfo(response.data.userData);
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err);
@@ -31,6 +35,7 @@ const useUserInfo = (userId: string) => {
       fetchUserInfo();
     }
   }, [userId]);
+
   return { userInfo, loading, error };
 };
 
