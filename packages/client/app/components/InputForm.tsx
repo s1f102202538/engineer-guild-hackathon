@@ -1,7 +1,7 @@
 import { Button } from 'app/components/ui/button';
 import { Input } from 'app/components/ui/input';
 
-type ChatInputProps = {
+type InputFormProps = {
   inputText: string;
   onInputChange: (text: string) => void;
   onSubmit: () => void;
@@ -9,9 +9,9 @@ type ChatInputProps = {
   onExampleClick: (example: string) => void;
 };
 
-export const ChatInput = ({ inputText, onInputChange, onSubmit, examples, onExampleClick }: ChatInputProps) => {
+const InputForm = ({ inputText, onInputChange, onSubmit, examples, onExampleClick }: InputFormProps) => {
   return (
-    <div className="border-t bg-white fixed bottom-16 left-0 right-0">
+    <div className="bg-white pb-2">
       <div className="p-2 overflow-x-auto whitespace-nowrap">
         <div className="inline-flex">
           {examples.map((example, i) => (
@@ -33,10 +33,12 @@ export const ChatInput = ({ inputText, onInputChange, onSubmit, examples, onExam
           value={inputText}
           onChange={(e) => onInputChange(e.target.value)}
         />
-        <Button className="bg-[#4a665e] hover:bg-[#3d5750]" onClick={onSubmit}>
+        <Button className="font-bold bg-green-600 hover:bg-green-400" onClick={onSubmit}>
           送信
         </Button>
       </div>
     </div>
   );
 };
+
+export default InputForm;

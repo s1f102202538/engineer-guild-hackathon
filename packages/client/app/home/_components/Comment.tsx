@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image'
 
 const Comment = () => {
   return (
@@ -9,7 +10,9 @@ const Comment = () => {
         </p>
       </div>
       {/* caractor */}
-      <div className="absolute bottom-0 left-0 p-2">caractor</div>
+      <div className="absolute bottom-16 left-0 p-2 drop-shadow-xl">
+      <Image src="/images/dog.png" alt="dog" width={60} height={60} className="mr-2 cursor-pointer" />
+      </div>
     </div>
   );
 };

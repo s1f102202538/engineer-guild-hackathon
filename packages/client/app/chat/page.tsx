@@ -1,7 +1,7 @@
 'use client';
 
 import ChatMessages from './_components/ChatMessages';
-import { ChatInput } from './_components/ChatInput';
+import InputForm from 'app/components/InputForm';
 import Navbar from 'app/components/Navbar';
 import Header from 'app/components/Header';
 import { useEffect, useState } from 'react';
@@ -55,15 +55,18 @@ const ChatPage = () => {
       <div className="flex flex-col h-screen bg-beige-100">
         <ChatMessages chatLogs={chatLogs} />
 
-        <ChatInput
-          inputText={inputText}
-          onInputChange={setInputText}
-          onSubmit={handleSubmit}
-          examples={examples}
-          onExampleClick={handleExampleClick}
-        />
-
-        <Navbar />
+        <div className="fixed bottom-16 left-0 right-0 z-10 bg-white">
+          <InputForm
+            inputText={inputText}
+            onInputChange={setInputText}
+            onSubmit={handleSubmit}
+            examples={examples}
+            onExampleClick={handleExampleClick}
+          />
+        </div>
+        <div className="fixed bottom-0 left-0 right-0 z-20">
+          <Navbar />
+        </div>
       </div>
     </div>
   );
