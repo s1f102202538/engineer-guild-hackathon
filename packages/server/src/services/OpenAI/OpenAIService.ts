@@ -56,19 +56,25 @@ export default class OpenAIService implements IOpenAIService {
   }
 
   // 食べないように諭すプロンプトを生成する関数
-  private createAdvisePrompt(food: string): string {
+  private createAdvisePrompt(message: string, chatLogs: ChatLog[]): string {
+    const context = chatLogs.map((log) => (log.isAI ? `AI: ${log.message}` : `User: ${log.message}`)).join('\n');
     const prompt = `
-    あなたは優秀な栄養士かつ心理学者です。
-    以下の条件を踏まえた上で、${food}を食べないように諭してください。
-    ・条件
-      ・相手の気持ちに配慮すること
-      ・長すぎる内容は避けること
-      ・相手が理解しやすい言葉を使うこと
+      あなたは優秀な栄養士かつ心理学者です。
+      以下の条件を踏まえた上で、ユーザーが${message}に含まれるジャンキーな食べ物を食べないように諭してください。
+      ・条件
+        ・相手の気持ちに配慮すること
+        ・長すぎる内容は避けること
+        ・相手が理解しやすい言葉を使うこと
 
-    以下に例を示します。
-    ・例1
-      ・入力: ハンバーガーがどうしても食べたいです。
-      ・出力: ハンバーガーおいしいですよね。でも、今日はヘルシーなものを食べてみませんか？おすすめはサラダです！
+      以下に例を示します。
+      ・例1
+        ・入力: ハンバーガーがどうしても食べたいです。
+        ・出力: ハンバーガーおいしいですよね。でも、今日はヘルシーなものを食べてみませんか？おすすめはサラダです！
+
+      以下は過去の会話の履歴です。
+      ${context}
+
+      今回のユーザーの入力: ${message}
     `;
 
     return prompt;
@@ -85,8 +91,11 @@ export default class OpenAIService implements IOpenAIService {
     return calories;
   }
 
-  public async AdviseAgainstEating(food: string): Promise<string> {
-    const prompt = this.createAdvisePrompt(food);
+  // 食べないように諭す
+  public async AdviseAgainstEating(userId: string, message: string): Promise<string> {
+    const chatLogs = await this.GetChatLog(userId, 20); // 直近20件のログを取得
+
+    const prompt = this.createAdvisePrompt(message, chatLogs);
 
     // TODO: バリデーション
     const response = await this.createChatCompletion(prompt, 50);

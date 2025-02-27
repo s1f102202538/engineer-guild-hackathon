@@ -55,7 +55,7 @@ export default class ChatController {
       // Userの入力したログを保存
       await this.openAIService.SaveChatLog(user.id, message, false);
 
-      const responseMessage = await this.openAIService.AdviseAgainstEating(message);
+      const responseMessage = await this.openAIService.AdviseAgainstEating(user.id, message);
 
       // AIの出力したログを保存
       await this.openAIService.SaveChatLog(user.id, responseMessage, true);
