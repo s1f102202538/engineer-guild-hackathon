@@ -4,7 +4,7 @@ import React from 'react';
 import { UserData } from 'app/services/UserService';
 import UserService from 'app/services/UserService';
 import { createContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import useClientId from 'app/hooks/useClientId';
 import EndureCalories from './_components/EndureCalories';
 import CheckWeight from './_components/CheckWeight';
