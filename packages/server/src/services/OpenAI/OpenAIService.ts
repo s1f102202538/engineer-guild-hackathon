@@ -4,6 +4,7 @@ import IOpenAIService from './IOpenAIService';
 import IOpenAIRepository from '../../repositories/OpenAI/IOpenAIRepository';
 import { TYPES } from '../../config/types';
 import { ChatLog } from '@prisma/client';
+import logger from '../../config/logger';
 
 @injectable()
 export default class OpenAIService implements IOpenAIService {
@@ -29,7 +30,7 @@ export default class OpenAIService implements IOpenAIService {
 
       return response.data.choices[0].message?.content ?? null;
     } catch (error) {
-      console.error('OpenAI:createChatCompletion: Error creating chat completion:', error);
+      logger.error('OpenAI:createChatCompletion: Error creating chat completion:', error);
       throw new Error('Chat completion failed');
     }
   }

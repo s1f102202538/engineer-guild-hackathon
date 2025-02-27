@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { injectable, inject } from 'inversify';
-import { Body, Controller, Param, Post, Res, Get } from 'routing-controllers';
+import { Body, Controller, Param, Post, Res } from 'routing-controllers';
 
 import IOpenAIService from '../services/OpenAI/IOpenAIService';
 import IUserService from '../services/User/IUserService';
@@ -8,6 +8,7 @@ import ChatLogModel from '../models/ChatLogModel';
 import { UserClientIdRequest } from '../models/commonRequest';
 import { TYPES } from '../config/types';
 import { IsNotEmpty, IsString } from 'class-validator';
+import logger from '../config/logger';
 
 class PersuadeRequest {
   @IsString()
@@ -58,7 +59,7 @@ export default class ChatController {
 
       return response.status(200).send({ message: responseMessage });
     } catch (error) {
-      console.error('ChatController:persuadeUser: ', error);
+      logger.error('ChatController:persuadeUser: ', error);
       return response.status(500);
     }
   }
@@ -76,13 +77,8 @@ export default class ChatController {
       const chatLogs = await this.openAIService.GetChatLog(user.id, maxTake);
       return response.status(200).send({ chatLogs });
     } catch (error) {
-      console.error('ChatController:getChatLog: ', error);
+      logger.error('ChatController:getChatLog: ', error);
       return response.status(500);
     }
-  }
-
-  @Get('/api-test')
-  async apiTest(@Res() response: Response) {
-    return response.status(200).send('API Test');
   }
 }

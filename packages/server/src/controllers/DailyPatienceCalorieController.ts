@@ -12,6 +12,7 @@ import { IsString, IsNotEmpty } from 'class-validator';
 import DailyPatienceCalorieModel from '../models/DailyPatienceCalorieModel';
 import { CalorieDataStatistics } from '../models/CalorieDataStatistics';
 import { TimeUnit } from '../repositories/DailyPatienceCalorie/DailyPatienceCalorieRepository';
+import logger from '../config/logger';
 
 class TodayCalorieDataResponse {
   todayCalorieData!: DailyPatienceCalorieModel;
@@ -65,7 +66,7 @@ export default class DailyPatienceCalorieController {
 
       return response.status(200).send({ todayCalorieData });
     } catch (error) {
-      console.error('DailyPatienceCalorieController:getDailyCalorieData: ', error);
+      logger.error('DailyPatienceCalorieController:getDailyCalorieData: ', error);
       return response.status(500);
     }
   }
@@ -83,7 +84,7 @@ export default class DailyPatienceCalorieController {
 
       return response.status(200).send({ calories });
     } catch (error) {
-      console.error('DailyPatienceCalorieController:convertFoodToCalories: ', error);
+      logger.error('DailyPatienceCalorieController:convertFoodToCalories: ', error);
       return response.status(500);
     }
   }
@@ -100,7 +101,7 @@ export default class DailyPatienceCalorieController {
 
       return response.status(200).send({ calorieDataStatistics: data });
     } catch (error) {
-      console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
+      logger.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
       return response.status(500);
     }
   }
