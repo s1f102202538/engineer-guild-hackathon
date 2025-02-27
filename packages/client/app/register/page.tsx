@@ -1,25 +1,34 @@
-"use client";
-// pages/index.tsx
-import type { NextPage } from 'next'
-import { useState } from 'react'
+'use client';
+
+import type { NextPage } from 'next';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import UserService from 'app/services/UserService';
+import useClientId from 'app/hooks/useClientId';
 
 const Home: NextPage = () => {
-  const [name, setName] = useState('')
-  const [weight, setWeight] = useState('')
-  const [targetWeight, setTargetWeight] = useState('')
+  const clientID = useClientId();
+  const [name, setName] = useState('');
+  const [weight, setWeight] = useState('');
+  const [weightGoal, setWeightGoal] = useState('');
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // ここでAPI送信などの処理を実装
-    console.log({ name, weight, targetWeight })
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await UserService.CreateUserData(clientID, name, Number(weight), Number(weightGoal));
+
+      // ホーム画面に遷移
+      router.push('/home');
+    } catch (error) {
+      console.error('User registration failed: ', error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-beige-100">
       <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full">
-        <h1 className="text-2xl font-bold text-green-700 mb-6 text-center">
-          ユーザー登録
-        </h1>
+        <h1 className="text-2xl font-bold text-green-700 mb-6 text-center">ユーザー登録</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="name" className="block text-green-600 font-medium mb-1">
@@ -58,8 +67,8 @@ const Home: NextPage = () => {
             <input
               type="number"
               id="targetWeight"
-              value={targetWeight}
-              onChange={(e) => setTargetWeight(e.target.value)}
+              value={weightGoal}
+              onChange={(e) => setWeightGoal(e.target.value)}
               className="w-full px-4 py-2 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="例: 65"
               required
@@ -76,7 +85,7 @@ const Home: NextPage = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

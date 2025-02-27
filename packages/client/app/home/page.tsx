@@ -4,6 +4,7 @@ import React from 'react';
 import { UserData } from 'app/services/UserService';
 import UserService from 'app/services/UserService';
 import { createContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import useClientId from 'app/hooks/useClientId';
 import EndureCalories from './_components/EndureCalories';
 import CheckWeight from './_components/CheckWeight';
@@ -16,6 +17,7 @@ export const UserDataContext = createContext<UserData | null>(null);
 
 const Page = () => {
   const clientId = useClientId();
+  const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
   // ユーザーデータを取得
   useEffect(() => {
@@ -23,9 +25,9 @@ const Page = () => {
       try {
         const userData = await UserService.GetUserData(clientId);
 
-        // TODO: ユーザーデータがない場合の処理
         if (userData == null) {
           // ユーザーデーがない場合は作成ページにリダイレクト
+          router.push('/register');
         }
 
         setUserData(userData);
