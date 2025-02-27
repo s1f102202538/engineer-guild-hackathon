@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import ChatMessages from './_components/ChatMessages';
-import { ChatInput } from './_components/ChatInput';
+import  InputForm from 'app/components/InputForm';
 import Navbar from 'app/components/Navbar';
 import Header from 'app/components/Header';
 
@@ -38,19 +38,24 @@ const ChatPage = () => {
 
   return (
     <div>
-      <Header title={'チャット'} />
-      <div className="flex flex-col h-screen bg-beige-100">
+      <Header title='チャット' />
+      <div className="relative flex flex-col h-screen bg-beige-100">
+
         <ChatMessages messages={messages} />
 
-        <ChatInput
+        <div className="fixed bottom-16 left-0 right-0 z-10 bg-white">
+        <InputForm
           inputText={inputText}
           onInputChange={setInputText}
           onSubmit={handleSubmit}
           examples={examples}
           onExampleClick={handleExampleClick}
         />
+      </div>
+      <div className="fixed bottom-0 left-0 right-0 z-20">
 
         <Navbar />
+        </div>
       </div>
     </div>
   );
