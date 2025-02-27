@@ -35,10 +35,10 @@ export default class ChatController {
   private userService: IUserService;
 
   constructor(
-    @inject(TYPES.OpenAIService) openAI: IOpenAIService,
+    @inject(TYPES.IOpenAIService) openAIService: IOpenAIService,
     @inject(TYPES.IUserService) userService: IUserService
   ) {
-    this.openAIService = openAI;
+    this.openAIService = openAIService;
     this.userService = userService;
   }
 
@@ -46,6 +46,9 @@ export default class ChatController {
   async persuadeUser(@Body() persuadeRequest: PersuadeRequest, @Res() response: Response<PersuadeResponse>) {
     try {
       const { clientId, message } = persuadeRequest;
+
+      logger.info('clientId: ' + clientId);
+      logger.info('message: ' + message);
 
       const user = await this.userService.GetUser(clientId);
 
