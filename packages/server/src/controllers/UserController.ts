@@ -7,6 +7,7 @@ import { TYPES } from '../config/types';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { UserClientIdRequest } from '../models/commonRequest';
 import UserData from '../models/UserData';
+import logger from '../config/logger';
 
 class CreateUserRequest {
   @IsString()
@@ -20,6 +21,10 @@ class CreateUserRequest {
   @IsNumber()
   @IsNotEmpty()
   weight!: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  weightGoal!: number;
 }
 
 class UpdateWeightGoalRequest {
@@ -66,12 +71,13 @@ export default class UserController {
         userData = {
           name: user.name,
           weight: user.weight,
+          weightGoal: user.weightGoal,
         } as UserData;
       }
 
       return response.status(200).send({ userData });
     } catch (error) {
-      console.error('UserController:getUser: ', error);
+      logger.error('UserController:getUser: ', error);
       return response.status(500);
     }
   }
@@ -79,13 +85,13 @@ export default class UserController {
   @Post('/create')
   async createUser(@Body() createUserRequest: CreateUserRequest, @Res() response: Response) {
     try {
-      const { clientId, name, weight } = createUserRequest;
+      const { clientId, name, weight, weightGoal } = createUserRequest;
 
       await this.userService.CreateUser(clientId, name, weight);
 
       return response.status(200).send('User created');
     } catch (error) {
-      console.error('UserController:createUser: ', error);
+      logger.error('UserController:createUser: ', error);
       return response.status(500);
     }
   }
@@ -99,7 +105,7 @@ export default class UserController {
 
       return response.status(200).send('User deleted');
     } catch (error) {
-      console.error('UserController:deleteUser: ', error);
+      logger.error('UserController:deleteUser: ', error);
       return response.status(500);
     }
   }
@@ -113,7 +119,7 @@ export default class UserController {
 
       return response.status(200).send('User calorie goal updated');
     } catch (error) {
-      console.error('UserController:updateUserCalorieGoal: ', error);
+      logger.error('UserController:updateUserCalorieGoal: ', error);
       return response.status(500);
     }
   }
@@ -127,7 +133,7 @@ export default class UserController {
 
       return response.status(200).send('User weight updated');
     } catch (error) {
-      console.error('UserController:updateUserWeight: ', error);
+      logger.error('UserController:updateUserWeight: ', error);
       return response.status(500);
     }
   }

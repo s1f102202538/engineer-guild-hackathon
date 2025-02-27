@@ -1,8 +1,9 @@
 import React from 'react';
+import './WeeklyCalorieCard.css';
 
 interface WeeklyCalorieCardProps {
-  weeklyCalories: number[]; // 週間減量カロリーのデータ（例: 日別の数値）
-  weeklyTotal: number;      // 週間合計カロリー（例: 1000）
+  weeklyCalories: number[]; // 日別の減量カロリー（例: [100, 200, 300, …]）
+  weeklyTotal: number;      // 週間合計カロリー
 }
 
 const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({
@@ -12,29 +13,32 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({
   const today = new Date();
   const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
 
+  // 配列の先頭が最も古い日、最後が今日となるように曜日ラベルを生成
+  const daysLabels = weeklyCalories.map((_, i) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - (weeklyCalories.length - 1 - i));
+    return daysOfWeek[date.getDay()];
+  });
+
+  // 最大のカロリー値を基準に比率計算を行う
+  const maxCalorie = Math.max(...weeklyCalories, 1); // ゼロ除算対策
+  const barMaxHeight = 134; // バーの最大高さ（ピクセル）
+
   return (
-    <div className="bg-white rounded-md shadow-md p-4">
-      <h2 className="text-lg sm:text-xl font-bold mb-2 text-center">週間減量カロリー</h2>
-      <p className="text-gray-500 mb-4 text-center">週間合計約{weeklyTotal}kcal</p>
-      <div className="flex flex-col h-48">
-        <div className="flex items-end justify-between flex-1">
-          {weeklyCalories.map((value, index) => {
-            // 最後の要素が今日になるように計算
-            const offset = weeklyCalories.length - 1 - index;
-            const date = new Date(today);
-            date.setDate(today.getDate() - offset);
-            const dayLabel = daysOfWeek[date.getDay()];
-            return (
-              <div key={index} className="flex-1 mx-1 flex flex-col items-center">
-                <div
-                  className="bg-green-500 w-full"
-                  style={{ height: `${value / 10}px` }}
-                />
-                <span className="mt-2 text-sm">{dayLabel}</span>
-              </div>
-            );
-          })}
-        </div>
+    <div className="card">
+      <h2 className="card-title">減量カロリー</h2>
+      <p className="card-subtitle">週間合計約{weeklyTotal}kcal</p>
+      <div className="chart-container">
+        {weeklyCalories.map((value, index) => (
+          <div key={index} className="bar-container">
+            {/* CSS変数 --target-height を使ってバーの高さを指定 */}
+            <div
+              className="bar"
+              style={{ '--target-height': `${(value / maxCalorie) * barMaxHeight}px` } as React.CSSProperties}
+            />
+            <span className="day-label">{daysLabels[index]}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

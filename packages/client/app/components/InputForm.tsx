@@ -1,17 +1,17 @@
 import { Button } from 'app/components/ui/button';
 import { Input } from 'app/components/ui/input';
 
-interface InputFormProps {
+type InputFormProps = {
   inputText: string;
   onInputChange: (text: string) => void;
   onSubmit: () => void;
   examples: string[];
   onExampleClick: (example: string) => void;
-}
+};
 
 const InputForm = ({ inputText, onInputChange, onSubmit, examples, onExampleClick }: InputFormProps) => {
   return (
-    <div className='bg-white pb-2'>
+    <div className="bg-white pb-2">
       <div className="p-2 overflow-x-auto whitespace-nowrap">
         <div className="inline-flex">
           {examples.map((example, i) => (
