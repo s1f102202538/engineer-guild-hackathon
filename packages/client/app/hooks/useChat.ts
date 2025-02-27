@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-type Message = {
+export type ChatLog = {
   text: string;
   isUser: boolean;
 };
 
 export const useChat = (userId: string) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<ChatLog[]>([]);
   const [inputText, setInputText] = useState('');
 
   console.log('userId確認します', userId);
