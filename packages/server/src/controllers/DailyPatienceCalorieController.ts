@@ -34,6 +34,7 @@ class UploadFoodRequest {
 
 class UploadFoodResponse {
   calories!: number | null;
+  message!: string;
 }
 
 @injectable()
@@ -77,12 +78,15 @@ export default class DailyPatienceCalorieController {
       const { food, userId } = uploadFoodRequest;
       const calories = await this.openAIService.ConvertFoodToCalories(food);
 
+      let message = '';
       if (calories !== null) {
         // カロリーを更新
         await this.dailyPatienceCalorieService.UpdateCalorie(userId, calories);
+        // 褒め言葉を生成
+        message = await this.openAIService.PraiseCaloriePatience(calories);
       }
 
-      return response.status(200).send({ calories });
+      return response.status(200).send({ calories, message });
     } catch (error) {
       logger.error('DailyPatienceCalorieController:convertFoodToCalories: ', error);
       return response.status(500);
