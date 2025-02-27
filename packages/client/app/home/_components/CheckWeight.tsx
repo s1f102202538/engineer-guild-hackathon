@@ -1,37 +1,17 @@
 'use client';
 
 import { Eye, EyeClosed } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
-
-import UserService, { UserData } from 'app/services/UserService';
-import useClientId from 'app/hooks/useClientId';
+import React, { useContext, useState } from 'react';
+import { UserDataContext } from 'app/home/page';
 
 const CheckWeight = () => {
   const [isCheckWeight, setIsCheckWeight] = useState<boolean>(true);
-  const clientId = useClientId();
-
-  const [userData, setUserData] = useState<UserData | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isloading, setIsLoading] = useState<boolean>(false);
+  const userData = useContext(UserDataContext);
 
   // 表示する体重
   const displayWeight = isCheckWeight && userData ? `${userData.weight}kg` : '--.-kg';
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      setIsLoading(true);
-      try {
-        const userData = await UserService.GetUserData(clientId);
-        setUserData(userData);
-      } catch (error) {
-        console.error('CheckWeight:fetchUserData: ', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, [clientId]);
 
   return (
     <div className="bg-white rounded-[24px] shadow-lg p-4 max-w-md mx-auto flex items-center">
