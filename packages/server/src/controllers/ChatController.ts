@@ -35,7 +35,7 @@ export default class ChatController {
 
   constructor(
     @inject(TYPES.OpenAIService) openAI: IOpenAIService,
-    @inject(TYPES.IOpenAIService) userService: IUserService
+    @inject(TYPES.IOpenAIService) userService: IUserService // This should be IUserService
   ) {
     this.openAIService = openAI;
     this.userService = userService;

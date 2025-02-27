@@ -17,7 +17,6 @@ const ChatPage = () => {
   const handleExampleClick = (example: string) => {
     setInputText(example);
   };
-
   return (
     <div className="flex flex-col h-screen bg-[#f5f1eb]">
       <header className="bg-[#4a665e] text-white p-4">
