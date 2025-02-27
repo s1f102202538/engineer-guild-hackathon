@@ -19,6 +19,7 @@ model User {
   name                  String
   weight                Float
   weightGoal            Float
+  totalPatienceCalories BigInt                 @default(0)
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   DailyPatienceCalories DailyPatienceCalorie[]

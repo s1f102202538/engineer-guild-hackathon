@@ -4,6 +4,7 @@ import { injectable, inject } from 'inversify';
 
 import IDailyPatienceCalorieService from '../services/DailyPatienceCalorie/IDailyPatienceCalorieService';
 import IOpenAIService from '../services/OpenAI/IOpenAIService';
+import IUserService from '../services/User/IUserService';
 
 import { TYPES } from '../config/types';
 import { UserClientIdRequest } from '../models/commonRequest';
@@ -42,13 +43,16 @@ class UploadFoodResponse {
 export default class DailyPatienceCalorieController {
   private dailyPatienceCalorieService: IDailyPatienceCalorieService;
   private openAIService: IOpenAIService;
+  private userService: IUserService;
 
   constructor(
     @inject(TYPES.IDailyPatienceCalorieService) dailyPatienceCalorieService: IDailyPatienceCalorieService,
-    @inject(TYPES.IOpenAIService) openAI: IOpenAIService
+    @inject(TYPES.IOpenAIService) openAI: IOpenAIService,
+    @inject(TYPES.IUserService) userService: IUserService
   ) {
     this.dailyPatienceCalorieService = dailyPatienceCalorieService;
     this.openAIService = openAI;
+    this.userService = userService;
   }
 
   @Post('/get-today-calorie-data')
@@ -82,6 +86,8 @@ export default class DailyPatienceCalorieController {
       if (calories !== null) {
         // カロリーを更新
         await this.dailyPatienceCalorieService.UpdateCalorie(userId, calories);
+        // ユーザーの総我慢カロリーを更新
+        await this.userService.UpdateUserTotalPatienceCalories(userId, calories);
         // 褒め言葉を生成
         message = await this.openAIService.PraiseCaloriePatience(calories);
       }

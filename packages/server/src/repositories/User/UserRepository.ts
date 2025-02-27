@@ -17,6 +17,10 @@ export default class UserRepository implements IUserRepository {
     await prisma.user.delete({ where: { clientId } });
   }
 
+  public async UpdateUserTotalPatienceCalories(id: string, updateCalories: number): Promise<void> {
+    await prisma.user.update({ where: { id }, data: { totalPatienceCalories: { increment: updateCalories } } });
+  }
+
   public async UpdateUserWeightGoal(id: string, weightGoal: number): Promise<void> {
     await prisma.user.update({ where: { id }, data: { weightGoal } });
   }
