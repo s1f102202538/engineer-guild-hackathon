@@ -33,7 +33,7 @@ export default class ChatService {
     return chatLogs;
   }
 
-  public static async sendPersuadeAI(clientId: string, message: string): Promise<string> {
+  public static async SendPersuadeAI(clientId: string, message: string): Promise<string> {
     const url = `${this.baseUrl}/persuade-user`;
     const body = { clientId, message } as UserClientIdRequest;
     const response = await axios.post<{ message: string }>(url, body);
