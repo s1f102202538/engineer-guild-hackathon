@@ -28,15 +28,14 @@ const logFormat = winston.format.combine(
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'debug',
   format: logFormat,
-  transports: [new winston.transports.Console()],
-});
-
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(
+  transports: [
     new winston.transports.Console({
-      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
-    })
-  );
-}
+      format:
+        process.env.NODE_ENV !== 'production'
+          ? winston.format.combine(winston.format.colorize(), winston.format.simple())
+          : logFormat,
+    }),
+  ],
+});
 
 export default logger;

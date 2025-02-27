@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { injectable, inject } from 'inversify';
-import { Body, Controller, Param, Post, Res } from 'routing-controllers';
+import { Body, Controller, Param, Post, Res, Get } from 'routing-controllers';
 
 import IOpenAIService from '../services/OpenAI/IOpenAIService';
 import IUserService from '../services/User/IUserService';
@@ -79,5 +79,10 @@ export default class ChatController {
       console.error('ChatController:getChatLog: ', error);
       return response.status(500);
     }
+  }
+
+  @Get('/api-test')
+  async apiTest(@Res() response: Response) {
+    return response.status(200).send('API Test');
   }
 }
