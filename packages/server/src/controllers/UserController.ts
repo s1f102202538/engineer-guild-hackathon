@@ -87,7 +87,7 @@ export default class UserController {
     try {
       const { clientId, name, weight, weightGoal } = createUserRequest;
 
-      await this.userService.CreateUser(clientId, name, weight);
+      await this.userService.CreateUser(clientId, name, weight, weightGoal);
 
       return response.status(200).send('User created');
     } catch (error) {
