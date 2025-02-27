@@ -7,10 +7,11 @@ import { Request, Response } from 'express';
 import { NextFunction } from 'express-serve-static-core';
 import morganMiddleware from './middleware/morgon';
 import logger from './config/logger';
+import ChatController from './controllers/ChatController';
 
 const server = createExpressServer({
   cors: true,
-  controllers: [UserController, DailyPatienceCalorieController],
+  controllers: [UserController, DailyPatienceCalorieController, ChatController],
   validation: {
     whitelist: true,
     forbidNonWhitelisted: true,
