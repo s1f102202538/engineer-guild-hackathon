@@ -2,37 +2,65 @@
 
 import ChatMessages from './_components/ChatMessages';
 import { ChatInput } from './_components/ChatInput';
-import { useUser, useAuth } from '@clerk/nextjs';
+import { useAuth } from '@clerk/nextjs';
 import Navbar from 'app/components/Navbar';
-import { useChat } from 'app/hooks/useChat';
 import Header from 'app/components/Header';
-import { useEffect } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+
+import ChatService, { ChatLog } from 'app/services/ChatService';
 
 const ChatPage = () => {
-  const { user } = useUser();
   const { userId } = useAuth();
-  console.log('user', user);
-  console.log('userId確認します', userId);
-  const { messages, inputText, setInputText, handleSubmit } = useChat(userId || '');
+
   const examples = ['お菓子を食べたい', 'お腹すいた', '夜食食べようか迷う'];
 
-  console.log('userId', userId);
-  console.log('user', user);
+  const [chatLogs, setChatLogs] = useState<ChatLog[]>([]);
+  const [inputText, setInputText] = useState<string>('');
 
-  // test
+  // 最初にこれまでチャットログを取得
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchChatlogData = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/chat/api-test`);
-        console.log('確認確認確認', response.data);
+        // usrIdがnullの場合はエラーを出力
+        if (userId == null) {
+          throw new Error('userId is null');
+        }
+
+        const chatLogs = await ChatService.GetUserChatLog(userId);
+        if (chatLogs == null) {
+          throw new Error('chatLogs is null');
+        }
+
+        setChatLogs(chatLogs);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('ChatPage:fetchChatlogData: ', error);
       }
     };
 
-    fetchData();
-  }, []);
+    fetchChatlogData();
+  }, [userId]);
+
+  const handleSubmit = async () => {
+    try {
+      if (userId == null) {
+        throw new Error('userId is null');
+      }
+
+      const responseMessage = await ChatService.sendPersuadeAI(userId, inputText);
+      if (responseMessage == null) {
+        throw new Error('responseMessage is null');
+      }
+
+      // chatLogsに新しいログを追加
+      const newChatLogs = [...chatLogs, { message: inputText, isAI: false }, { message: responseMessage, isAI: true }];
+      setChatLogs(newChatLogs);
+
+      // 入力欄をクリア
+      setInputText('');
+    } catch (error) {
+      console.error('ChatPage:handleSubmit: ', error);
+    }
+  };
 
   const handleExampleClick = (example: string) => {
     setInputText(example);
@@ -42,7 +70,7 @@ const ChatPage = () => {
     <div>
       <Header title={'チャット'} />
       <div className="flex flex-col h-screen bg-beige-100">
-        <ChatMessages messages={messages} />
+        <ChatMessages chatLogs={chatLogs} />
 
         <ChatInput
           inputText={inputText}
