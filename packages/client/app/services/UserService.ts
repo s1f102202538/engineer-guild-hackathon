@@ -5,7 +5,7 @@ import { UserClientIdRequest } from 'app/types/UserClientIdRequest';
 export type UserData = {
   name: string;
   weight: number;
-  weightGoal: number | null;
+  weightGoal: number;
 };
 
 export default class UserService {
@@ -29,9 +29,14 @@ export default class UserService {
     return userData;
   }
 
-  public static async CreateUserData(clientId: string, name: string, weight: number): Promise<void> {
+  public static async CreateUserData(
+    clientId: string,
+    name: string,
+    weight: number,
+    weightGoal: number
+  ): Promise<void> {
     const url = `${this.baseUrl}/create`;
-    const body = { clientId, name, weight } as UserClientIdRequest & { name: string; weight: number };
+    const body = { clientId, name, weight, weightGoal } as UserClientIdRequest & UserData;
     const response = await axios.post<void>(url, body);
 
     if (response.status !== 200) {

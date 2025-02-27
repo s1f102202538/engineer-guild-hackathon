@@ -22,14 +22,14 @@ export default class UserService implements IUserService {
     return user;
   }
 
-  public async CreateUser(clientId: string, name: string, weight: number): Promise<void> {
+  public async CreateUser(clientId: string, name: string, weight: number, weightGoal: number): Promise<void> {
     // user が既に存在しているか確認
     const user = await this.userRepository.FindUserByClientId(clientId);
     if (user != null) {
       throw new Error('UserService:CreateUser: User already exists');
     }
 
-    await this.userRepository.CreateUser(clientId, name, weight);
+    await this.userRepository.CreateUser(clientId, name, weight, weightGoal);
   }
 
   public async DeleteUser(clientId: string): Promise<void> {

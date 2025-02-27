@@ -18,7 +18,7 @@ model User {
   clientId              String                 @unique
   name                  String
   weight                Float
-  weightGoal            Float?
+  weightGoal            Float
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   DailyPatienceCalories DailyPatienceCalorie[]
