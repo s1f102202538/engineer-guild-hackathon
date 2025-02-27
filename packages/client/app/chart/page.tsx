@@ -8,14 +8,14 @@ import Header from '../components/Header';
 const HomePage: React.FC = () => {
   // 例としてのダミーデータ
   const totalCaloriesData = 2000;
-  const weeklyCaloriesData = [300, 200, 400, 150, 350, 100, 200];
+  const weeklyCaloriesData = [300, 200, 400, 150, 350, 100, 200,300,350];
   const weeklyTotal = 1000; // 週間合計カロリーの例
 
   return (
     <div>
       <Header title={'レポート'} />
-      <div className="min-h-screen bg-beige-100 py-2">
-        <div className="max-w-md mx-auto space-y-4">
+      <div className="min-h-screen ">
+        <div className="mx-auto ">
           {/* 合計我慢カロリーカード */}
           <TotalCalorieCard totalCalories={totalCaloriesData} />
           {/* 週間減量カロリーカード */}
