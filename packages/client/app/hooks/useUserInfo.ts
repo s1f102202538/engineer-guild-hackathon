@@ -15,6 +15,7 @@ const useUserInfo = (userId: string) => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
+        console.log(userId, 'userId(useUserInfo)');
         const response = await axios.post<{ userData: UserInfo }>(
           `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/user/get`,
           { clientId: userId }
