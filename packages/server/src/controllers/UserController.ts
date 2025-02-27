@@ -21,6 +21,10 @@ class CreateUserRequest {
   @IsNumber()
   @IsNotEmpty()
   weight!: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  weightGoal!: number;
 }
 
 class UpdateWeightGoalRequest {
@@ -81,7 +85,7 @@ export default class UserController {
   @Post('/create')
   async createUser(@Body() createUserRequest: CreateUserRequest, @Res() response: Response) {
     try {
-      const { clientId, name, weight } = createUserRequest;
+      const { clientId, name, weight, weightGoal } = createUserRequest;
 
       await this.userService.CreateUser(clientId, name, weight);
 

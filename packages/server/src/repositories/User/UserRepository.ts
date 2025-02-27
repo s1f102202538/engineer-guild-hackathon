@@ -9,8 +9,8 @@ export default class UserRepository implements IUserRepository {
     return await prisma.user.findUnique({ where: { clientId } });
   }
 
-  public async CreateUser(clientId: string, name: string, weight: number): Promise<void> {
-    await prisma.user.create({ data: { clientId, name, weight } });
+  public async CreateUser(clientId: string, name: string, weight: number, weightGoal: number): Promise<void> {
+    await prisma.user.create({ data: { clientId, name, weight, weightGoal } });
   }
 
   public async DeleteUser(clientId: string): Promise<void> {
