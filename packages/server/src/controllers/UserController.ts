@@ -32,6 +32,16 @@ class UpdateWeightGoalRequest {
   weightGoal!: number;
 }
 
+class UpdateWeightRequest {
+  @IsString()
+  @IsNotEmpty()
+  clientId!: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  weight!: number;
+}
+
 class GetUserDataResponse {
   userData!: UserData | null;
 }
@@ -104,6 +114,20 @@ export default class UserController {
       return response.status(200).send('User calorie goal updated');
     } catch (error) {
       console.error('UserController:updateUserCalorieGoal: ', error);
+      return response.status(500);
+    }
+  }
+
+  @Post('/update-weight')
+  async updateUserWeight(@Body() updateWeightRequest: UpdateWeightRequest, @Res() response: Response) {
+    try {
+      const { clientId, weight } = updateWeightRequest;
+
+      await this.userService.UpdateUserWeight(clientId, weight);
+
+      return response.status(200).send('User weight updated');
+    } catch (error) {
+      console.error('UserController:updateUserWeight: ', error);
       return response.status(500);
     }
   }
