@@ -3,7 +3,7 @@ import { Controller, Res, Post, Body, Param } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
 
 import IDailyPatienceCalorieService from '../services/DailyPatienceCalorie/IDailyPatienceCalorieService';
-import OpenAIService from '../services/OpenAI/OpenAIService';
+import IOpenAIService from '../services/OpenAI/IOpenAIService';
 
 import { TYPES } from '../config/types';
 import { UserClientIdRequest } from '../models/commonRequest';
@@ -12,6 +12,7 @@ import { IsString, IsNotEmpty } from 'class-validator';
 import DailyPatienceCalorieModel from '../models/DailyPatienceCalorieModel';
 import { CalorieDataStatistics } from '../models/CalorieDataStatistics';
 import { TimeUnit } from '../repositories/DailyPatienceCalorie/DailyPatienceCalorieRepository';
+import logger from '../config/logger';
 
 class TodayCalorieDataResponse {
   todayCalorieData!: DailyPatienceCalorieModel;
@@ -39,11 +40,11 @@ class UploadFoodResponse {
 @Controller('/daily-patience-calorie')
 export default class DailyPatienceCalorieController {
   private dailyPatienceCalorieService: IDailyPatienceCalorieService;
-  private openAIService: OpenAIService;
+  private openAIService: IOpenAIService;
 
   constructor(
     @inject(TYPES.IDailyPatienceCalorieService) dailyPatienceCalorieService: IDailyPatienceCalorieService,
-    @inject(TYPES.OpenAIService) openAI: OpenAIService
+    @inject(TYPES.IOpenAIService) openAI: IOpenAIService
   ) {
     this.dailyPatienceCalorieService = dailyPatienceCalorieService;
     this.openAIService = openAI;
@@ -65,7 +66,7 @@ export default class DailyPatienceCalorieController {
 
       return response.status(200).send({ todayCalorieData });
     } catch (error) {
-      console.error('DailyPatienceCalorieController:getDailyCalorieData: ', error);
+      logger.error('DailyPatienceCalorieController:getDailyCalorieData: ', error);
       return response.status(500);
     }
   }
@@ -83,7 +84,7 @@ export default class DailyPatienceCalorieController {
 
       return response.status(200).send({ calories });
     } catch (error) {
-      console.error('DailyPatienceCalorieController:convertFoodToCalories: ', error);
+      logger.error('DailyPatienceCalorieController:convertFoodToCalories: ', error);
       return response.status(500);
     }
   }
@@ -100,7 +101,7 @@ export default class DailyPatienceCalorieController {
 
       return response.status(200).send({ calorieDataStatistics: data });
     } catch (error) {
-      console.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
+      logger.error('DailyPatienceCalorieController:getDailyStatistics: ', error);
       return response.status(500);
     }
   }

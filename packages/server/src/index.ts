@@ -7,6 +7,8 @@ import DailyPatienceCalorieController from './controllers/DailyPatienceCalorieCo
 import morganMiddleware from './middleware/morgon';
 import logger from './config/logger';
 import ChatController from './controllers/ChatController';
+import { useContainer } from 'routing-controllers';
+import { containers } from './config/inversify.config';
 
 const app = express();
 
@@ -14,6 +16,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morganMiddleware);
+
+useContainer(containers);
 
 useExpressServer(app, {
   cors: true,

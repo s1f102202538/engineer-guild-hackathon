@@ -16,7 +16,7 @@ export default class UserService implements IUserService {
   public async GetUser(clientId: string): Promise<User> {
     const user = await this.userRepository.FindUserByClientId(clientId);
     if (user == null) {
-      throw new Error('UserRepository:FindUserByClientId: User not found');
+      throw new Error('UserService:GetUser: User not found');
     }
 
     return user;
