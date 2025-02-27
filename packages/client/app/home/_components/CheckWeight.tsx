@@ -1,17 +1,37 @@
 'use client';
 
 import { Eye, EyeClosed } from 'lucide-react';
-import React, { useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
-import useUserInfo from 'app/hooks/useUserInfo';
+import React, { useEffect, useState } from 'react';
+
+import UserService, { UserData } from 'app/services/UserService';
+import useClientId from 'app/hooks/useClientId';
 
 const CheckWeight = () => {
   const [isCheckWeight, setIsCheckWeight] = useState<boolean>(true);
-  const { userId } = useAuth();
-  const { userInfo } = useUserInfo(userId || '');
+  const clientId = useClientId();
+
+  const [userData, setUserData] = useState<UserData | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isloading, setIsLoading] = useState<boolean>(false);
 
   // 表示する体重
-  const displayWeight = isCheckWeight && userInfo ? `${userInfo.weight}kg` : '--.-kg';
+  const displayWeight = isCheckWeight && userData ? `${userData.weight}kg` : '--.-kg';
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      setIsLoading(true);
+      try {
+        const userData = await UserService.GetUserData(clientId);
+        setUserData(userData);
+      } catch (error) {
+        console.error('CheckWeight:fetchUserData: ', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [clientId]);
 
   return (
     <div className="bg-white rounded-[24px] shadow-lg p-4 max-w-md mx-auto flex items-center">
