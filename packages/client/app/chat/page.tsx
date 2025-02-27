@@ -32,7 +32,7 @@ const ChatPage = () => {
 
   const handleSubmit = async () => {
     try {
-      const responseMessage = await ChatService.sendPersuadeAI(userId, inputText);
+      const responseMessage = await ChatService.SendPersuadeAI(userId, inputText);
 
       // chatLogsに新しいログを追加
       const newChatLogs = [...chatLogs, { message: inputText, isAI: false }, { message: responseMessage, isAI: true }];

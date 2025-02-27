@@ -27,7 +27,7 @@ type uploadFoodResponse = {
 export default class DailyPatienceCalorieService {
   private static readonly baseUrl = `${process.env.REACT_APP_API_URL}/daily-patience-calorie`;
 
-  public static async getTodayCalorieData(clientId: string): Promise<DailyPatienceCalorie> {
+  public static async GetTodayCalorieData(clientId: string): Promise<DailyPatienceCalorie> {
     const url = `${this.baseUrl}/get-today-calorie-data`;
     const body = { clientId } as UserClientIdRequest;
     const response = await axios.post<DailyPatienceCalorie>(url, body);
@@ -44,7 +44,7 @@ export default class DailyPatienceCalorieService {
     return todayCalorieData;
   }
 
-  public static async getCalorieDataStatistics(clientId: string, timeUnit: TimeUnit): Promise<CalorieDataStatistics> {
+  public static async GetCalorieDataStatistics(clientId: string, timeUnit: TimeUnit): Promise<CalorieDataStatistics> {
     const url = `${this.baseUrl}/get-calorie-data-statistics:${timeUnit}`;
     const body = { clientId, timeUnit } as UserClientIdRequest;
     const response = await axios.post<CalorieDataStatistics>(url, body);
@@ -61,7 +61,7 @@ export default class DailyPatienceCalorieService {
     return calorieDataStatistics;
   }
 
-  public static async uploadFood(clientId: string, food: string): Promise<{ calories: number; message: string }> {
+  public static async UploadFood(clientId: string, food: string): Promise<{ calories: number; message: string }> {
     const url = `${this.baseUrl}/upload-food`;
     const body = { clientId, food } as UserClientIdRequest;
     const response = await axios.post<uploadFoodResponse>(url, body);
