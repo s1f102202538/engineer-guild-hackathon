@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { injectable, inject } from 'inversify';
-import { Body, Controller, Post, QueryParam, Res } from 'routing-controllers';
+import { Body, Controller, Param, Post, Res } from 'routing-controllers';
 
 import IOpenAIService from '../services/OpenAI/IOpenAIService';
 import IUserService from '../services/User/IUserService';
@@ -65,7 +65,7 @@ export default class ChatController {
 
   @Post('/get-chat-log/:maxTake')
   async getChatLog(
-    @QueryParam('maxTake') maxTake: number,
+    @Param('maxTake') maxTake: number,
     @Body() userClientIdRequest: UserClientIdRequest,
     @Res() response: Response<GetChatLogResponse>
   ) {

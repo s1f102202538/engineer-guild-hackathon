@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Controller, Res, Post, Body, QueryParam } from 'routing-controllers';
+import { Controller, Res, Post, Body, Param } from 'routing-controllers';
 import { injectable, inject } from 'inversify';
 
 import IDailyPatienceCalorieService from '../services/DailyPatienceCalorie/IDailyPatienceCalorieService';
@@ -90,7 +90,7 @@ export default class DailyPatienceCalorieController {
 
   @Post('/get-calorie-data-statistics/:timeUnit')
   async getDailyStatistics(
-    @QueryParam('timeUnit') timeUnit: TimeUnit,
+    @Param('timeUnit') timeUnit: TimeUnit,
     @Body() userClientIdRequest: UserClientIdRequest,
     @Res() response: Response<CalorieDataStatisticsResponse>
   ) {
