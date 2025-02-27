@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { injectable, inject } from 'inversify';
-import { Body, Controller, Param, Post, Res } from 'routing-controllers';
+import { Body, Controller, Param, Post, Res, Get } from 'routing-controllers';
 
 import IOpenAIService from '../services/OpenAI/IOpenAIService';
 import IUserService from '../services/User/IUserService';
@@ -35,7 +35,7 @@ export default class ChatController {
 
   constructor(
     @inject(TYPES.OpenAIService) openAI: IOpenAIService,
-    @inject(TYPES.IOpenAIService) userService: IUserService // This should be IUserService
+    @inject(TYPES.IUserService) userService: IUserService
   ) {
     this.openAIService = openAI;
     this.userService = userService;
@@ -79,5 +79,10 @@ export default class ChatController {
       console.error('ChatController:getChatLog: ', error);
       response.status(500);
     }
+  }
+
+  @Get('/api-test')
+  async apiTest(@Res() response: Response) {
+    response.status(200).send('API Test');
   }
 }

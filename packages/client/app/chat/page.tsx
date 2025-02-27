@@ -6,6 +6,8 @@ import { useUser, useAuth } from '@clerk/nextjs';
 import Navbar from 'app/components/Navbar';
 import { useChat } from 'app/hooks/useChat';
 import Header from 'app/components/Header';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const ChatPage = () => {
   const { user } = useUser();
@@ -16,9 +18,24 @@ const ChatPage = () => {
   console.log('userId', userId);
   console.log('user', user);
 
+  // test
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/chat/api-test`);
+        console.log('確認確認確認', response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleExampleClick = (example: string) => {
     setInputText(example);
   };
+
   return (
     <div>
       <Header title={'チャット'} />
