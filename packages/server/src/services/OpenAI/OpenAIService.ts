@@ -11,8 +11,11 @@ export default class OpenAIService implements IOpenAIService {
   private openAIService: OpenAIApi;
   private openAIRepository: IOpenAIRepository;
 
+  private readonly MAX_TOKENS = 200;
+
   constructor(@inject(TYPES.IOpenAIRepository) openAIRepository: IOpenAIRepository) {
     const configuration = new Configuration({
+      basePath: `${process.env.OPENAI_BASE_URL}`,
       apiKey: `${process.env.OPENAI_API_KEY}`,
     });
     this.openAIService = new OpenAIApi(configuration);
@@ -20,17 +23,17 @@ export default class OpenAIService implements IOpenAIService {
   }
 
   // chatgpt
-  private async createChatCompletion(prompt: string, maxTokens: number): Promise<string | null> {
+  private async createChatCompletion(prompt: string): Promise<string | null> {
     try {
       const response = await this.openAIService.createChatCompletion({
-        model: 'gpt-4',
+        model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
-        max_tokens: maxTokens,
+        max_tokens: this.MAX_TOKENS,
       });
 
       return response.data.choices[0].message?.content ?? null;
     } catch (error) {
-      logger.error('OpenAI:createChatCompletion: Error creating chat completion:', error);
+      logger.error('OpenAIService:createChatCompletion: Error creating chat completion:', error);
       throw new Error('Chat completion failed');
     }
   }
@@ -114,7 +117,7 @@ export default class OpenAIService implements IOpenAIService {
   public async ConvertFoodToCalories(food: string): Promise<number | null> {
     const prompt = this.createCaloriePrompt(food);
     // TODO: バリデーション
-    const calorieString = await this.createChatCompletion(prompt, 50);
+    const calorieString = await this.createChatCompletion(prompt);
 
     const calories = calorieString ? Number(calorieString) : null;
 
@@ -128,7 +131,7 @@ export default class OpenAIService implements IOpenAIService {
     const prompt = this.createAdvisePrompt(message, chatLogs);
 
     // TODO: バリデーション
-    const response = await this.createChatCompletion(prompt, 50);
+    const response = await this.createChatCompletion(prompt);
     if (response == null) {
       throw new Error('OpenAIService:AdviseAgainstEating: Failed to create chat completion');
     }
@@ -140,7 +143,7 @@ export default class OpenAIService implements IOpenAIService {
   public async PraiseCaloriePatience(calories: number): Promise<string> {
     const prompt = this.createPraisePrompt(calories);
 
-    const response = await this.createChatCompletion(prompt, 50);
+    const response = await this.createChatCompletion(prompt);
 
     if (response == null) {
       throw new Error('OpenAIService:PraiseCaloriePatience: Failed to create chat completion');
