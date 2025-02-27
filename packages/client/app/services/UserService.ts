@@ -9,7 +9,7 @@ export type UserData = {
 };
 
 export default class UserService {
-  private static readonly baseUrl = `${process.env.REACT_APP_API_URL}/user`;
+  private static readonly baseUrl = `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/user`;
 
   public static async GetUserData(clientId: string): Promise<UserData | null> {
     const url = `${this.baseUrl}/get`;

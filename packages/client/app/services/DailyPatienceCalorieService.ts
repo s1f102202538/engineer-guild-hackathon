@@ -25,7 +25,7 @@ type uploadFoodResponse = {
 };
 
 export default class DailyPatienceCalorieService {
-  private static readonly baseUrl = `${process.env.REACT_APP_API_URL}/daily-patience-calorie`;
+  private static readonly baseUrl = `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/daily-patience-calorie`;
 
   public static async GetTodayCalorieData(clientId: string): Promise<DailyPatienceCalorie> {
     const url = `${this.baseUrl}/get-today-calorie-data`;

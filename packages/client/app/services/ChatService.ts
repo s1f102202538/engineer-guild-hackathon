@@ -8,7 +8,7 @@ export type ChatLog = {
 };
 
 export default class ChatService {
-  private static readonly baseUrl = `${process.env.REACT_APP_API_URL}/chat`;
+  private static readonly baseUrl = `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/chat`;
 
   public static async GetUserChatLog(clientId: string, maxtake: number = 50): Promise<ChatLog[]> {
     const url = `${this.baseUrl}/persuade-user/${maxtake}`;
