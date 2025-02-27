@@ -3,6 +3,7 @@
 import React from 'react';
 import { UserData } from 'app/services/UserService';
 import UserService from 'app/services/UserService';
+import DailyPatienceCalorieService from 'app/services/DailyPatienceCalorieService';
 import { createContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useClientId from 'app/hooks/useClientId';
@@ -25,9 +26,9 @@ const Page = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [userData, calories] = await Promise.all([
+        const [userData, dailyPatienceCalorie] = await Promise.all([
           UserService.GetUserData(clientId),
-          UserService.GetTotalPatienceCalories(clientId),
+          DailyPatienceCalorieService.GetTodayCalorieData(clientId),
         ]);
 
         if (!userData) {
@@ -36,7 +37,7 @@ const Page = () => {
         }
 
         setUserData(userData);
-        setDailyPatienceCalories(calories);
+        setDailyPatienceCalories(dailyPatienceCalorie.calories);
       } catch (error) {
         console.error('Failed to get data: ', error);
       }
