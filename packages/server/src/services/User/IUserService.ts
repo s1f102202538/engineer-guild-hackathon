@@ -7,6 +7,10 @@ export default interface IUserService {
 
   DeleteUser(clientId: string): Promise<void>;
 
+  GetUserTotalPatienceCalories(clientId: string): Promise<number>;
+
+  UpdateUserTotalPatienceCalories(clientId: string, updateCalories: number): Promise<void>;
+
   UpdateUserWeightGoal(clientId: string, weightGoal: number): Promise<void>;
 
   UpdateUserWeight(clientId: string, weight: number): Promise<void>;

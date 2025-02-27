@@ -51,6 +51,10 @@ class GetUserDataResponse {
   userData!: UserData | null;
 }
 
+class GetTotalPatienceCaloriesResponse {
+  totalPatienceCalories!: number;
+}
+
 @injectable()
 @Controller('/user')
 export default class UserController {
@@ -134,6 +138,22 @@ export default class UserController {
       return response.status(200).send('User weight updated');
     } catch (error) {
       logger.error('UserController:updateUserWeight: ', error);
+      return response.status(500);
+    }
+  }
+
+  @Post('/get-total-patience-calories')
+  async getUserTotalPatienceCalories(
+    @Body() userClientIdRequest: UserClientIdRequest,
+    @Res() response: Response<GetTotalPatienceCaloriesResponse>
+  ) {
+    try {
+      const { clientId } = userClientIdRequest;
+      const totalPatienceCalories = await this.userService.GetUserTotalPatienceCalories(clientId);
+
+      return response.status(200).send({ totalPatienceCalories });
+    } catch (error) {
+      logger.error('UserController:getUserTotalPatienceCalories: ', error);
       return response.status(500);
     }
   }

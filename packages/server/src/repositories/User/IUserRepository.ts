@@ -7,6 +7,8 @@ export default interface IUserRepository {
 
   DeleteUser(clientId: string): Promise<void>;
 
+  UpdateUserTotalPatienceCalories(id: string, updateCalories: number): Promise<void>;
+
   UpdateUserWeightGoal(id: string, weightGoal: number): Promise<void>;
 
   UpdateUserWeight(id: string, weight: number): Promise<void>;

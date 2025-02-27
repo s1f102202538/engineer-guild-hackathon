@@ -40,6 +40,24 @@ export default class UserService implements IUserService {
     }
   }
 
+  public async GetUserTotalPatienceCalories(clientId: string): Promise<number> {
+    const user = await this.userRepository.FindUserByClientId(clientId);
+    if (user == null) {
+      throw new Error('UserService:GetUserTotalPatienceCalories: User not found');
+    }
+
+    return Number(user.totalPatienceCalories);
+  }
+
+  public async UpdateUserTotalPatienceCalories(clientId: string, updateCalories: number): Promise<void> {
+    const user = await this.userRepository.FindUserByClientId(clientId);
+    if (user == null) {
+      throw new Error('UserService:UpdateUserTotalPatienceCalories: User not found');
+    }
+
+    await this.userRepository.UpdateUserTotalPatienceCalories(user.id, updateCalories);
+  }
+
   public async UpdateUserWeightGoal(clientId: string, weightGoal: number): Promise<void> {
     const user = await this.userRepository.FindUserByClientId(clientId);
     if (user == null) {
