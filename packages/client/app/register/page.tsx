@@ -2,7 +2,7 @@
 
 import type { NextPage } from 'next';
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import UserService from 'app/services/UserService';
 import useClientId from 'app/hooks/useClientId';
 
