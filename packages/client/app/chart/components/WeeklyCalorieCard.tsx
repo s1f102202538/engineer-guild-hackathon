@@ -13,8 +13,8 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({
   const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
 
   return (
-    <div className="bg-white rounded-md shadow-md p-4">
-      <h2 className="text-lg sm:text-xl font-bold mb-2 text-center">週間減量カロリー</h2>
+    <div className="bg-white rounded-md shadow-md p-4 h-[30vh] w-full">
+      <h2 className="text-lg sm:text-xl font-bold mb-2 text-center">減量カロリー</h2>
       <p className="text-gray-500 mb-4 text-center">週間合計約{weeklyTotal}kcal</p>
       <div className="flex flex-col h-48">
         <div className="flex items-end justify-between flex-1">
