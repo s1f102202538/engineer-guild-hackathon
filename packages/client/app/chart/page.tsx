@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
   return (
     <div>
       <Header title={'レポート'} />
-      <div className="min-h-screen bg-gray-100 py-6">
+      <div className="min-h-screen bg-beige-100 py-2">
         <div className="max-w-md mx-auto space-y-4">
           {/* 合計我慢カロリーカード */}
           <TotalCalorieCard totalCalories={totalCaloriesData} />
