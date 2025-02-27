@@ -80,6 +80,36 @@ export default class OpenAIService implements IOpenAIService {
     return prompt;
   }
 
+  //カロリーを我慢したことを褒めるプロンプトを生成する関数
+  private createPraisePrompt(calories: number): string {
+    const prompt = `
+      あなたは優秀な栄養士かつ心理学者です。
+      以下の条件を踏まえた上で、ユーザーが過去にカロリーを我慢できたことを褒めてください。
+      ・条件
+        ・相手の気持ちに配慮すること
+        ・長すぎる内容は避けること
+        ・相手が理解しやすい言葉を使うこと
+
+      以下に例を示します。
+      ・例1
+        ・入力: 500
+        ・出力: 500kcal我慢できたなんて、本当に頑張りましたね！
+
+      ユーザーから入力されたカロリー数に応じて、リアクションも変えてください。
+      ・例1
+        ・入力: 2000
+        ・出力: 素晴らしいですね！！2000kcal我慢できたなんて信じられません！
+      ・例2
+        ・入力: 100
+        ・出力: よく頑張りましたね！積み重ねていきましょう！
+
+
+      今回のユーザーの入力: ${calories}kcal
+    `;
+
+    return prompt;
+  }
+
   //食べ物からカロリーを計算
   public async ConvertFoodToCalories(food: string): Promise<number | null> {
     const prompt = this.createCaloriePrompt(food);
@@ -101,6 +131,19 @@ export default class OpenAIService implements IOpenAIService {
     const response = await this.createChatCompletion(prompt, 50);
     if (response == null) {
       throw new Error('OpenAIService:AdviseAgainstEating: Failed to create chat completion');
+    }
+
+    return response;
+  }
+
+  // カロリーを我慢したことを褒める
+  public async PraiseCaloriePatience(calories: number): Promise<string> {
+    const prompt = this.createPraisePrompt(calories);
+
+    const response = await this.createChatCompletion(prompt, 50);
+
+    if (response == null) {
+      throw new Error('OpenAIService:PraiseCaloriePatience: Failed to create chat completion');
     }
 
     return response;
