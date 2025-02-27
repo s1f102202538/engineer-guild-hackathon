@@ -11,20 +11,15 @@ export type UserData = {
 export default class UserService {
   private static readonly baseUrl = `${process.env.REACT_APP_API_URL}/user`;
 
-  public static async GetUserData(clientId: string): Promise<UserData> {
+  public static async GetUserData(clientId: string): Promise<UserData | null> {
     const url = `${this.baseUrl}/get`;
     const body = { clientId } as UserClientIdRequest;
-    const response = await axios.post<UserData>(url, body);
+    const response = await axios.post<UserData | null>(url, body);
 
     if (response.status !== 200) {
       throw new Error('UserService:getUserData: status is not 200');
     }
-
-    const userData = {
-      name: response.data.name,
-      weight: response.data.weight,
-      weightGoal: response.data.weightGoal,
-    } as UserData;
+    const userData = response.data;
 
     return userData;
   }
