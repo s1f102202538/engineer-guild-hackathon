@@ -14,14 +14,12 @@ const TotalCalorieCard: React.FC<TotalCalorieCardProps> = ({ totalCalories }) =>
   const chocolateBars = Math.floor(totalCalories / chocolateBarCalories);
 
   return (
-    <div className="bg-white p-4 h-[20vh] w-full">
-      <h2 className="text-lg sm:text-xl font-bold mb-4 text-center">これまでの我慢したカロリー</h2>
+    <div className="bg-white p-4 h-auto w-auto mx-6 my-2 rounded-2xl drop-shadow-xl border-b-2">
+      <h2 className="text-xl sm:text-4xl font-bold mb-2 text-center border-b-2">これまでの我慢したカロリー</h2>
       <div className="flex flex-col items-center justify-center">
-        <span className="text-lg font-medium">約 {totalCalories} kcal</span>
-        <span className="text-md text-gray-600 mt-2">約 {lostKg} kg 減量</span>
-        <span className="text-md text-gray-600 mt-2">
-          チョコレートバー {chocolateBars} 個分のカロリーに相当
-        </span>
+        <span className="text-2xl font-bold text-3xl">約 {totalCalories} kcal</span>
+        <span className="text-md mt-2 text-blue-500">約 {lostKg} kg 減量</span>
+        <span className="text-sm text-gray-600 mt-2">チョコレートバー {chocolateBars} 個分のカロリーに相当</span>
       </div>
     </div>
   );
