@@ -42,8 +42,7 @@ export default class DailyPatienceCalorieRepository implements IDailyPatienceCal
   public async UpdateData(id: number, updateCalories: number): Promise<void> {
     await prisma.dailyPatienceCalorie.update({
       where: { id },
-      // 2桁までの小数点以下を保存
-      data: { calories: { increment: Number(updateCalories.toFixed(2)) } },
+      data: { calories: updateCalories },
     });
   }
 
