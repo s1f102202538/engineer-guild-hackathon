@@ -65,23 +65,14 @@ export default class UserController {
   }
 
   @Post('/get')
-  async getUserName(@Body() userClientIdRequest: UserClientIdRequest, @Res() response: Response<GetUserDataResponse>) {
+  async getUserData(@Body() userClientIdRequest: UserClientIdRequest, @Res() response: Response<GetUserDataResponse>) {
     try {
       const { clientId } = userClientIdRequest;
-      const user = await this.userService.GetUser(clientId);
-
-      let userData: UserData | null = null;
-      if (user != null) {
-        userData = {
-          name: user.name,
-          weight: user.weight,
-          weightGoal: user.weightGoal,
-        } as UserData;
-      }
+      const userData = await this.userService.GetUserData(clientId);
 
       return response.status(200).send({ userData });
     } catch (error) {
-      logger.error('UserController:getUser: ', error);
+      logger.error('UserController:getUserData: ', error);
       return response.status(500);
     }
   }
