@@ -49,32 +49,34 @@ const AddEndureCalories = (props: AddEndureCaloriesProps) => {
   };
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      {/* トリガー */}
-      <DrawerTrigger asChild>
-        <button
-          className="fixed bottom-20 right-4 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
-          aria-label="Add new item"
-        >
-          <NotebookPen className="h-6 w-6" />
-        </button>
-      </DrawerTrigger>
-      <DrawerContent className="pb-20">
-        <DrawerHeader>
-          <DrawerTitle>我慢カロリー記入フォーム</DrawerTitle>
-          <DrawerDescription>我慢できた食品を記入して下さい！</DrawerDescription>
-        </DrawerHeader>
+    <div>
+      <Drawer open={open} onOpenChange={setOpen}>
+        {/* トリガー */}
+        <DrawerTrigger asChild>
+          <button
+            className="fixed bottom-20 right-4 z-10 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-transform hover:scale-105 active:scale-95 add-endure-calories"
+            aria-label="Add new item"
+          >
+            <NotebookPen className="h-6 w-6" />
+          </button>
+        </DrawerTrigger>
+        <DrawerContent className="pb-20">
+          <DrawerHeader>
+            <DrawerTitle>我慢カロリー記入フォーム</DrawerTitle>
+            <DrawerDescription>我慢できた食品を記入して下さい！</DrawerDescription>
+          </DrawerHeader>
 
-        {/* InputForm コンポーネント */}
-        <InputForm
-          inputText={inputText}
-          onInputChange={setInputText}
-          onSubmit={handleSubmit}
-          examples={examples}
-          onExampleClick={handleExampleClick}
-        />
-      </DrawerContent>
-    </Drawer>
+          {/* InputForm コンポーネント */}
+          <InputForm
+            inputText={inputText}
+            onInputChange={setInputText}
+            onSubmit={handleSubmit}
+            examples={examples}
+            onExampleClick={handleExampleClick}
+          />
+        </DrawerContent>
+      </Drawer>
+    </div>
   );
 };
 
