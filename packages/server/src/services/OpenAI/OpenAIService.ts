@@ -5,6 +5,7 @@ import IOpenAIRepository from '../../repositories/OpenAI/IOpenAIRepository';
 import { TYPES } from '../../config/types';
 import { ChatLog } from '@prisma/client';
 import logger from '../../config/logger';
+import extractNumbers from '../../utils/extractnumbers';
 
 @injectable()
 export default class OpenAIService implements IOpenAIService {
@@ -26,7 +27,7 @@ export default class OpenAIService implements IOpenAIService {
   private async createChatCompletion(prompt: string): Promise<string | null> {
     try {
       const response = await this.openAIService.createChatCompletion({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: this.MAX_TOKENS,
       });
@@ -116,10 +117,15 @@ export default class OpenAIService implements IOpenAIService {
   //食べ物からカロリーを計算
   public async ConvertFoodToCalories(food: string): Promise<number | null> {
     const prompt = this.createCaloriePrompt(food);
-    // TODO: バリデーション
-    const calorieString = await this.createChatCompletion(prompt);
+    const answer = await this.createChatCompletion(prompt);
 
-    const calories = calorieString ? Number(calorieString) : null;
+    if (answer == null) return null;
+
+    // 回答から数値のみを取り出す
+    const calories = Number(extractNumbers(answer));
+
+    // calorieStringが数値の文字列かどうかを判定
+    if (isNaN(extractNumbers(answer as string))) return null;
 
     return calories;
   }
