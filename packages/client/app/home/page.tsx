@@ -13,6 +13,7 @@ import Navbar from '../components/Navbar';
 import Comment from './_components/Comment';
 import AddEndureCalories from './_components/AddEndureCalories';
 import Header from '../components/Header';
+import Tutorial from 'app/components/Tutorial';
 
 export const UserDataContext = createContext<UserData | null>(null);
 export const DailyPatienceCaloriesContext = createContext<number>(0);
@@ -72,12 +73,14 @@ const Page = () => {
 
   return (
     <div className="w-full mx-auto h-screen bg-white flex flex-col relative text-black">
+      <Tutorial />
+
       <UserDataContext.Provider value={userData}>
         <DailyPatienceCaloriesContext.Provider value={dailyPatienceCalories}>
           <CommentContext.Provider value={comment}>
             <Header title="ホーム" />
             <div className="w-full mx-auto h-screen bg-white flex flex-col relative text-black">
-              <main className="flex-1 px-4 pt-4 pb-16 space-y-4 overflow-hidden">
+              <main className="flex-1 px-4 pt-4 pb-16 space-y-4 overflow-hidden main-content">
                 <CheckWeight />
                 <EndureCalories />
                 <Comment />

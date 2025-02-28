@@ -15,7 +15,7 @@ const CheckWeight = () => {
   const displayWeightGoal = isCheckWeight && userData ? `${userData.weightGoal}kg` : '--.-kg';
 
   return (
-    <div className="bg-white rounded-[24px] shadow-lg p-4 max-w-md mx-auto flex items-center">
+    <div className="bg-white rounded-[24px] shadow-lg p-4 max-w-md mx-auto flex items-center check-weight">
       {/* 左側のスペーサー */}
       <div className="flex-1" />
 
