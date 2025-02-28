@@ -1,5 +1,6 @@
-import Image from 'next/image';
+// import Image from 'next/image';
 import { ChatLog } from 'app/services/ChatService';
+import { Avatar, AvatarFallback, AvatarImage } from 'app/components/ui/avatar';
 
 interface ChatMessagesProps {
   chatLogs: ChatLog[];
@@ -11,8 +12,11 @@ const ChatMessages = (props: ChatMessagesProps) => {
       {props.chatLogs.map((chatLog, i) => (
         <div key={i} className={`mb-4 flex ${!chatLog.isAI ? 'justify-end' : ''}`}>
           {chatLog.isAI && (
-            <div className="mr-2">
-              <Image src="/images/dog.png" alt="AI Icon" width={350} height={350} />
+            <div className="mr-2 flex-shrink-0 shadow-">
+              <Avatar>
+                <AvatarImage src="/images/icon2.png" alt="@shadcn" />
+                <AvatarFallback>Icon</AvatarFallback>
+              </Avatar>
             </div>
           )}
           <div className={`inline-block p-3 rounded-xl ${!chatLog.isAI ? 'bg-[#4a665e] text-white' : 'bg-gray-100'}`}>
