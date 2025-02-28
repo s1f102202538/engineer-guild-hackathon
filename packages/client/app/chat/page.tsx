@@ -63,9 +63,9 @@ const ChatPage = () => {
   };
 
   return (
-    <div>
+    <div className="bg-grey-500">
       <Header title={'チャット'} />
-      <div className="flex flex-col h-screen bg-beige-100">
+      <div className="flex flex-col h-screen">
         <div className="flex-1 overflow-y-auto px-4 py-4 pb-40">
           <ChatMessages chatLogs={chatLogs} />
           {loading && (
@@ -76,7 +76,7 @@ const ChatPage = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="fixed bottom-16 left-0 right-0 z-10 bg-white">
+        <div className="fixed bottom-16 left-0 right-0 z-10 bg-beige-100">
           <InputForm
             inputText={inputText}
             onInputChange={setInputText}
@@ -85,7 +85,7 @@ const ChatPage = () => {
             onExampleClick={handleExampleClick}
           />
         </div>
-        <div className="fixed bottom-0 left-0 right-0 z-20">
+        <div className="fixed bottom-0 left-0 right-0 z-20 bg-beige-100">
           <Navbar />
         </div>
       </div>

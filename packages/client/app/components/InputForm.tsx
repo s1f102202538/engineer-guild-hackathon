@@ -11,7 +11,7 @@ type InputFormProps = {
 
 const InputForm = ({ inputText, onInputChange, onSubmit, examples, onExampleClick }: InputFormProps) => {
   return (
-    <div className="bg-white pb-2">
+    <div className="bg-white pb-2 border-t border-gray-200">
       <div className="p-2 overflow-x-auto whitespace-nowrap">
         <div className="inline-flex">
           {examples.map((example, i) => (
