@@ -30,7 +30,7 @@ class UploadFoodRequest {
 
   @IsString()
   @IsNotEmpty()
-  userId!: string;
+  clientId!: string;
 }
 
 class UploadFoodResponse {
@@ -62,7 +62,9 @@ export default class DailyPatienceCalorieController {
   ) {
     try {
       const { clientId } = userClientIdRequest;
-      const data = await this.dailyPatienceCalorieService.GetTodayCalorieData(clientId);
+      const user = await this.userService.GetUser(clientId);
+
+      const data = await this.dailyPatienceCalorieService.GetTodayCalorieData(user.id);
 
       const todayCalorieData = {
         date: data.date,
@@ -79,15 +81,16 @@ export default class DailyPatienceCalorieController {
   @Post('/upload-food')
   async uploadFood(@Body() uploadFoodRequest: UploadFoodRequest, @Res() response: Response<UploadFoodResponse>) {
     try {
-      const { food, userId } = uploadFoodRequest;
+      const { food, clientId } = uploadFoodRequest;
+      const userId = await this.userService.GetUser(clientId);
       const calories = await this.openAIService.ConvertFoodToCalories(food);
 
       let message = '';
       if (calories !== null) {
         // カロリーを更新
-        await this.dailyPatienceCalorieService.UpdateCalorie(userId, calories);
+        await this.dailyPatienceCalorieService.UpdateCalorie(userId.id, calories);
         // ユーザーの総我慢カロリーを更新
-        await this.userService.UpdateUserTotalPatienceCalories(userId, calories);
+        await this.userService.UpdateUserTotalPatienceCalories(clientId, calories);
         // 褒め言葉を生成
         message = await this.openAIService.PraiseCaloriePatience(calories);
       }
@@ -107,7 +110,8 @@ export default class DailyPatienceCalorieController {
   ) {
     try {
       const { clientId } = userClientIdRequest;
-      const data = await this.dailyPatienceCalorieService.GetCalorieDataStatistics(clientId, timeUnit);
+      const user = await this.userService.GetUser(clientId);
+      const data = await this.dailyPatienceCalorieService.GetCalorieDataStatistics(user.id, timeUnit);
 
       return response.status(200).send({ calorieDataStatistics: data });
     } catch (error) {
