@@ -10,16 +10,12 @@ const useClientId = () => {
   const [clientId, setClientId] = useState<string>('');
 
   useEffect(() => {
-    try {
-      if (userId == null) {
-        router.push('/login');
-        return;
-      }
-
-      setClientId(userId);
-    } catch (error) {
-      console.error('useClientId: ', error);
+    if (userId == null) {
+      router.push('/sign-in');
+      return;
     }
+
+    setClientId(userId);
   }, [userId, router]);
 
   return clientId;
