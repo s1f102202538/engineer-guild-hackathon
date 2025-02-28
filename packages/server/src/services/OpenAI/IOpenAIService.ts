@@ -5,7 +5,7 @@ export default interface IOpenAIService {
 
   AdviseAgainstEating(userId: string, message: string): Promise<string>;
 
-  PraiseCaloriePatience(calories: number): Promise<string>;
+  PraiseFoodPatience(food: string): Promise<string>;
 
   SaveChatLog(userId: string, message: string, isAI: boolean): Promise<void>;
 
