@@ -28,15 +28,14 @@ const Page = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [userData, dailyPatienceCalorie] = await Promise.all([
-          UserService.GetUserData(clientId),
-          DailyPatienceCalorieService.GetTodayCalorieData(clientId),
-        ]);
+        const userData = await UserService.GetUserData(clientId);
 
-        if (!userData) {
+        if (userData == null) {
           router.push('/register');
           return;
         }
+
+        const dailyPatienceCalorie = await DailyPatienceCalorieService.GetTodayCalorieData(clientId);
 
         setUserData(userData);
         setDailyPatienceCalories(dailyPatienceCalorie.calories);

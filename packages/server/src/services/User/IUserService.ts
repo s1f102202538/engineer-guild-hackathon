@@ -1,7 +1,10 @@
 import { User } from '@prisma/client';
+import UserData from '../../models/UserData';
 
 export default interface IUserService {
   GetUser(clientId: string): Promise<User>;
+
+  GetUserData(clientId: string): Promise<UserData | null>;
 
   CreateUser(clientId: string, name: string, weight: number, weightGoal: number): Promise<void>;
 

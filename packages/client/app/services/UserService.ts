@@ -8,6 +8,10 @@ export type UserData = {
   weightGoal: number;
 };
 
+type GetUserDataResponse = {
+  userData: UserData | null;
+};
+
 type GetTotalPatienceCaloriesResponse = {
   totalPatienceCalories: number;
 };
@@ -18,14 +22,13 @@ export default class UserService {
   public static async GetUserData(clientId: string): Promise<UserData | null> {
     const url = `${this.baseUrl}/get`;
     const body = { clientId } as UserClientIdRequest;
-    const response = await axios.post<UserData | null>(url, body);
+    const response = await axios.post<GetUserDataResponse>(url, body);
 
     if (response.status !== 200) {
-      throw new Error('UserService:getUserData: status is not 200');
+      throw new Error('UserService:GetUserData: status is not 200');
     }
-    const userData = response.data;
 
-    return userData;
+    return response.data.userData;
   }
 
   public static async CreateUserData(

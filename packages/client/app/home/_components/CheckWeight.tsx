@@ -12,6 +12,7 @@ const CheckWeight = () => {
 
   // 表示する体重
   const displayWeight = isCheckWeight && userData ? `${userData.weight}kg` : '--.-kg';
+  const displayWeightGoal = isCheckWeight && userData ? `${userData.weightGoal}kg` : '--.-kg';
 
   return (
     <div className="bg-white rounded-[24px] shadow-lg p-4 max-w-md mx-auto flex items-center">
@@ -27,7 +28,7 @@ const CheckWeight = () => {
         <span className="text-gray-400">→</span>
         <div className="flex flex-col items-center">
           <span className="text-sm text-gray-500">目標の体重</span>
-          <span className="text-xl font-bold">{displayWeight}</span>
+          <span className="text-xl font-bold">{displayWeightGoal}</span>
         </div>
       </div>
 

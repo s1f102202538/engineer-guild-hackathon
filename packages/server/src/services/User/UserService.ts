@@ -4,6 +4,7 @@ import IUserService from './IUserService';
 
 import { TYPES } from '../../config/types';
 import { User } from '@prisma/client';
+import UserData from '../../models/UserData';
 
 @injectable()
 export default class UserService implements IUserService {
@@ -20,6 +21,19 @@ export default class UserService implements IUserService {
     }
 
     return user;
+  }
+
+  public async GetUserData(clientId: string): Promise<UserData | null> {
+    const user = await this.userRepository.FindUserByClientId(clientId);
+    if (user == null) {
+      return null;
+    }
+
+    return {
+      name: user.name,
+      weight: Number(user.weight),
+      weightGoal: Number(user.weightGoal),
+    };
   }
 
   public async CreateUser(clientId: string, name: string, weight: number, weightGoal: number): Promise<void> {

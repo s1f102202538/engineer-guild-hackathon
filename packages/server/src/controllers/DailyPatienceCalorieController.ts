@@ -15,10 +15,6 @@ import { CalorieDataStatistics } from '../models/CalorieDataStatistics';
 import { TimeUnit } from '../repositories/DailyPatienceCalorie/DailyPatienceCalorieRepository';
 import logger from '../config/logger';
 
-class TodayCalorieDataResponse {
-  todayCalorieData!: DailyPatienceCalorieModel;
-}
-
 class CalorieDataStatisticsResponse {
   calorieDataStatistics!: CalorieDataStatistics;
 }
@@ -58,20 +54,15 @@ export default class DailyPatienceCalorieController {
   @Post('/get-today-calorie-data')
   async getDailyCalorieData(
     @Body() userClientIdRequest: UserClientIdRequest,
-    @Res() response: Response<TodayCalorieDataResponse>
+    @Res() response: Response<DailyPatienceCalorieModel>
   ) {
     try {
       const { clientId } = userClientIdRequest;
       const user = await this.userService.GetUser(clientId);
 
-      const data = await this.dailyPatienceCalorieService.GetTodayCalorieData(user.id);
+      const todayCalorieData = await this.dailyPatienceCalorieService.GetTodayCalorieData(user.id);
 
-      const todayCalorieData = {
-        date: data.date,
-        calories: data.calories,
-      } as DailyPatienceCalorieModel;
-
-      return response.status(200).send({ todayCalorieData });
+      return response.status(200).send({ date: todayCalorieData.date, calories: todayCalorieData.calories });
     } catch (error) {
       logger.error('DailyPatienceCalorieController:getDailyCalorieData: ', error);
       return response.status(500);
