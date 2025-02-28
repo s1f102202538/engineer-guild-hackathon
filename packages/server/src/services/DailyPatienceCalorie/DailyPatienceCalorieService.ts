@@ -24,13 +24,11 @@ export default class DailyPatienceCalorieService implements IDailyPatienceCalori
       throw new Error('DailyPatienceCalorieService:UpdateCalorie: Today data not found');
     }
 
-    const totalUpdateCalorie = todayData.calories + updateCalorie;
-
     // 今日のデータがない場合は新規作成
     if (todayData == null) {
       await this.dailyPatienceCalorieRepository.CreateData(userId, updateCalorie);
     } else {
-      await this.dailyPatienceCalorieRepository.UpdateData(todayData.id, totalUpdateCalorie);
+      await this.dailyPatienceCalorieRepository.UpdateData(todayData.id, updateCalorie);
     }
   }
 
