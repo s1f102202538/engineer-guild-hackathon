@@ -1,14 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  // YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './WeeklyCalorieCard.css';
 import { Tabs, TabsList, TabsTrigger } from 'app/components/ui/tabs';
 
@@ -28,6 +20,8 @@ const formatDate = (date: Date): string => {
 };
 
 const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, weeklyCalories, monthlyCalories }) => {
+  // const today = new Date();
+
   // 選択された期間：'week'（1週間）、'month'（1か月）、'half-year'（半年）、'year'（1年）
   const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'half-year' | 'year'>('week');
 
@@ -90,7 +84,7 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, we
   }
 
   // y 軸の上限値
-  // const maxCalorie = data.length > 0 ? Math.max(...data.map(item => item.calorie)) : 0;
+  const maxCalorie = data.length > 0 ? Math.max(...data.map((item) => item.calorie)) : 0;
 
   // グラフ横幅を、データ件数に合わせて調整
   const widthFactorMap: Record<typeof selectedPeriod, number> = {
@@ -120,19 +114,16 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, we
   // X軸の tick 表示を条件分岐で制御する関数
   const tickFormatter = (value: string, index: number): string => {
     if (selectedPeriod === 'month') {
-      // 1か月表示は、データ件数が例として 30 件の場合、7日ごとに 1 つ表示
       if ((index + 1) % 7 === 0 || index === data.length - 1) {
         return value;
       }
       return '';
     } else if (selectedPeriod === 'half-year') {
-      // 半年表示：weeklyCalories のデータ件数が例として26件の場合、約4週ごとに 1 つ表示
       if ((index + 1) % 4 === 0 || index === data.length - 1) {
         return value;
       }
       return '';
     }
-    // week, year はすべて表示
     return value;
   };
 
@@ -146,7 +137,7 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, we
       {/* 期間選択タブ */}
       <Tabs
         defaultValue="week"
-        onValueChange={(value) => setSelectedPeriod(value as 'week' | 'month' | 'half-year' | 'year')}
+        onValueChange={(value: 'week' | 'month' | 'half-year' | 'year') => setSelectedPeriod(value)}
       >
         <TabsList className="flex space-x-6 my-4 justify-center">
           <TabsTrigger value="week">1週間</TabsTrigger>
@@ -158,23 +149,43 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, we
 
       {/* グラフと Y 軸を横並びに */}
       <div className="flex ml-2 h-30 w-30">
+        {/* グラフ全体を relative コンテナでラップ */}
+        {/* <div className="relative"> */}
         {/* 横スクロール可能なグラフ部分 */}
-        <div className="flex-1 overflow-x-auto" ref={scrollContainerRef}>
+        <div className="overflow-x-auto" ref={scrollContainerRef}>
           <div style={chartContainerStyle}>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+              <BarChart data={data}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" tickFormatter={tickFormatter} />
+                <XAxis dataKey="day" tickFormatter={tickFormatter} tick={{ fill: '#aaa' }} />
                 <Tooltip />
                 <Bar dataKey="calorie" fill="#48bb78" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
-        {/* Y 軸部分（横幅約13%） */}
-        <div>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data} margin={{ top: 30, right: 0, bottom: 30, left: 0 }}></BarChart>
+        {/* 絶対配置した Y 軸（グラフ内にオーバーレイ） */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            height: 300,
+            width: 70,
+            pointerEvents: 'none',
+          }}
+        >
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data} margin={{ top: 20, right: -60, bottom: 45, left: 30 }}>
+              <YAxis
+                orientation="right"
+                tickLine={false}
+                axisLine={false}
+                domain={[0, maxCalorie]}
+                tick={{ fill: '#333333', textAnchor: 'end' }}
+                dx={-10}
+              />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>

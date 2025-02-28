@@ -22,6 +22,7 @@
     "next": "15.1.7",
     "react": "^18",
     "react-dom": "^18",
+    "react-joyride": "2.5.3",
     "recharts": "^2.15.1",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",

@@ -18,10 +18,10 @@ const Navbar = () => {
       <Link href="/home" className={linkClasses('/home')}>
         <Home className="h-6 w-6" />
       </Link>
-      <Link href="/chat" className={linkClasses('/chat')} aria-label="Menu">
+      <Link href="/chat" className={`${linkClasses('/chat')} navbar-chat`} aria-label="Menu">
         <PawPrint className="h-6 w-6" />
       </Link>
-      <Link href="/chart" className={linkClasses('/settings')} aria-label="Notifications">
+      <Link href="/chart" className={`${linkClasses('/chat')} navbar-chart`} aria-label="Notifications">
         <ChartNoAxesCombined className="h-6 w-6" />
       </Link>
     </nav>

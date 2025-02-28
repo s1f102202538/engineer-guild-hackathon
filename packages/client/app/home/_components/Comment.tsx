@@ -1,8 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useContext } from 'react';
-import { CommentContext } from '../page';
-import { UserDataContext } from '../page';
+import { CommentContext, UserDataContext } from '../_contexts/HomeContext';
 
 const Comment = () => {
   const comment = useContext(CommentContext);
@@ -11,7 +10,7 @@ const Comment = () => {
   const displayComment = comment !== '' ? comment : `${userData?.name}さん、おかえりなさい!`;
 
   return (
-    <div className="relative w-full max-w-lg h-64 p-4">
+    <div className="relative w-full max-w-lg h-64 p-4 comment">
       <div className="bg-green-100 rounded-xl p-3 ml-8 overflow-auto break-words">
         <p className="font-semibold text-md">{displayComment}</p>
       </div>

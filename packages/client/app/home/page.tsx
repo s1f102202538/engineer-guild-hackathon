@@ -4,7 +4,7 @@ import React from 'react';
 import { UserData } from 'app/services/UserService';
 import UserService from 'app/services/UserService';
 import DailyPatienceCalorieService from 'app/services/DailyPatienceCalorieService';
-import { createContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useClientId from 'app/hooks/useClientId';
 import EndureCalories from './_components/EndureCalories';
@@ -13,10 +13,8 @@ import Navbar from '../components/Navbar';
 import Comment from './_components/Comment';
 import AddEndureCalories from './_components/AddEndureCalories';
 import Header from '../components/Header';
-
-export const UserDataContext = createContext<UserData | null>(null);
-export const DailyPatienceCaloriesContext = createContext<number>(0);
-export const CommentContext = createContext<string>('');
+import Tutorial from 'app/components/Tutorial';
+import { CommentContext, DailyPatienceCaloriesContext, UserDataContext } from './_contexts/HomeContext';
 
 const Page = () => {
   const clientId = useClientId();
@@ -72,12 +70,14 @@ const Page = () => {
 
   return (
     <div className="w-full mx-auto h-screen bg-white flex flex-col relative text-black">
+      <Tutorial />
+
       <UserDataContext.Provider value={userData}>
         <DailyPatienceCaloriesContext.Provider value={dailyPatienceCalories}>
           <CommentContext.Provider value={comment}>
             <Header title="ホーム" />
             <div className="w-full mx-auto h-screen bg-white flex flex-col relative text-black">
-              <main className="flex-1 px-4 pt-4 pb-16 space-y-4 overflow-hidden">
+              <main className="flex-1 px-4 pt-4 pb-16 space-y-4 overflow-hidden main-content">
                 <CheckWeight />
                 <EndureCalories />
                 <Comment />
