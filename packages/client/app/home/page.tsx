@@ -75,7 +75,7 @@ const Page = () => {
       <UserDataContext.Provider value={userData}>
         <DailyPatienceCaloriesContext.Provider value={dailyPatienceCalories}>
           <CommentContext.Provider value={comment}>
-            <Header title="home" />
+            <Header title="ホーム" />
             <div className="w-full mx-auto h-screen bg-beige-100 flex flex-col relative text-black">
               <main className="flex-1 px-4 pt-4 pb-16 space-y-4 overflow-hidden">
                 <CheckWeight />

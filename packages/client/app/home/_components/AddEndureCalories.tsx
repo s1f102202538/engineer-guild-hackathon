@@ -19,15 +19,26 @@ interface AddEndureCaloriesProps {
 const AddEndureCalories = (props: AddEndureCaloriesProps) => {
   const [open, setOpen] = useState(false);
   const [inputText, setInputText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 例としてのサンプル例。必要に応じて変更してください。
   const examples = ['カップラーメン', 'ポテトチップス', 'コーラ'];
 
   const handleSubmit = async () => {
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || isSubmitting) return;
 
-    // 親コンポーネントに入力を渡す
-    await props.onSubmit(inputText);
+    try {
+      setIsSubmitting(true);
+
+      // 親コンポーネントに入力を渡す
+      await props.onSubmit(inputText);
+
+      setInputText('');
+    } catch (error) {
+      console.error('Failed to submit:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
 
     // 入力を空にする
     setInputText('');
