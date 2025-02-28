@@ -2,15 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './WeeklyCalorieCard.css';
-
-interface WeeklyCalorieCardProps {
-  // 1日ごとのカロリー我慢量（1週間・1か月表示用：例として週は7日、月は30日分のデータ）
-  dailyCalories: number[];
-  // 1週間ごとのカロリー我慢量（半年表示用：例として26週間分の集計データ）
-  weeklyCalories: number[];
-  // 1か月ごとのカロリー我慢量（年間表示用：例として12ヶ月分の集計データ）
-  monthlyCalories: number[];
-}
+import useClientId from 'app/hooks/useClientId';
+import DailyPatienceCalorieService, { TimeUnit, CalorieDataStatistics } from 'app/services/DailyPatienceCalorieService';
 
 const formatDate = (date: Date): string => {
   const mm = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -18,46 +11,62 @@ const formatDate = (date: Date): string => {
   return `${mm}/${dd}`;
 };
 
-const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, weeklyCalories, monthlyCalories }) => {
+const WeeklyCalorieCard: React.FC = () => {
+  const clientId = useClientId();
+  const day_time_unit: TimeUnit = 'day';
+  const [calorieData, setCalorieData] = useState<CalorieDataStatistics | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'half-year' | 'year'>('week');
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const today = new Date();
 
-  // 選択された期間：'week'（1週間）、'month'（1か月）、'half-year'（半年）、'year'（1年）
-  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'half-year' | 'year'>('week');
+  // clientId が取得できたときに API からデータを取得する
+  useEffect(() => {
+    if (!clientId) return; // clientId がまだ取得されていない場合は何もしない
 
-  // 棒グラフ横スクロール用の ref
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+    console.log('userId', clientId);
+    const fetchData = async () => {
+      try {
+        const calorieLogs = await DailyPatienceCalorieService.GetCalorieDataStatistics(clientId, day_time_unit);
+        setCalorieData(calorieLogs);
+        console.log('calorieLogs', calorieLogs);
+      } catch (error) {
+        console.error('APIからのデータ取得に失敗しました', error);
+      }
+    };
+    fetchData();
+  }, [clientId]); // clientId を依存配列に追加
 
-  // 各期間ごとにデータ（ラベルは全件「MM/DD」形式）を作成
+  if (!calorieData) {
+    return <div>Loading...</div>;
+  }
+
   let data: { day: string; calorie: number }[] = [];
   if (selectedPeriod === 'week') {
-    data = dailyCalories.map((value, index) => {
+    data = calorieData.dailyCalories.map((value, index) => {
       const date = new Date(today);
-      date.setDate(today.getDate() - (dailyCalories.length - 1 - index));
+      date.setDate(today.getDate() - (calorieData.dailyCalories.length - 1 - index));
       return { day: formatDate(date), calorie: value };
     });
   } else if (selectedPeriod === 'month') {
-    data = dailyCalories.map((value, index) => {
+    data = calorieData.dailyCalories.map((value, index) => {
       const date = new Date(today);
-      date.setDate(today.getDate() - (dailyCalories.length - 1 - index));
+      date.setDate(today.getDate() - (calorieData.dailyCalories.length - 1 - index));
       return { day: formatDate(date), calorie: value };
     });
   } else if (selectedPeriod === 'half-year') {
-    data = weeklyCalories.map((value, index) => {
+    data = calorieData.weeklyCalories.map((value, index) => {
       const date = new Date(today);
-      // 各週データ：最新の週を today とし、1 週＝7 日として算出
-      date.setDate(today.getDate() - (weeklyCalories.length - 1 - index) * 7);
+      date.setDate(today.getDate() - (calorieData.weeklyCalories.length - 1 - index) * 7);
       return { day: formatDate(date), calorie: value };
     });
   } else if (selectedPeriod === 'year') {
-    data = monthlyCalories.map((value, index) => {
+    data = calorieData.monthlyCalories.map((value, index) => {
       const date = new Date(today);
-      // 最新の月を today の月として、過去の月は月単位でずらす
-      date.setMonth(today.getMonth() - (monthlyCalories.length - 1 - index));
+      date.setMonth(today.getMonth() - (calorieData.monthlyCalories.length - 1 - index));
       return { day: formatDate(date), calorie: value };
     });
   }
 
-  // 表示合計値の算出（週間表示の場合は最新の7件のみを合算）
   let displayedTotal = 0;
   if (selectedPeriod === 'week') {
     const weekData = data.slice(-7);
@@ -77,10 +86,7 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, we
     periodLabel = '年間合計約';
   }
 
-  // y 軸の上限値
   const maxCalorie = data.length > 0 ? Math.max(...data.map((item) => item.calorie)) : 0;
-
-  // グラフ横幅を、データ件数に合わせて調整
   const widthFactorMap: Record<typeof selectedPeriod, number> = {
     week: 100 / 7,
     month: 100 / data.length,
@@ -90,7 +96,6 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, we
   const chartWidthNumber = data.length * widthFactorMap[selectedPeriod];
   const computedChartWidth = chartWidthNumber < 100 ? '100%' : `${chartWidthNumber}%`;
 
-  // データ件数が少ない場合は右寄せのためのスタイル設定
   const chartContainerStyle = {
     minWidth: '100%',
     width: computedChartWidth,
@@ -98,14 +103,12 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, we
     justifyContent: chartWidthNumber < 100 ? 'flex-end' : undefined,
   };
 
-  // データ件数が8件以上の場合、初期スクロール位置を右端に設定
   useEffect(() => {
     if (data.length >= 8 && scrollContainerRef.current) {
       scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
     }
   }, [data]);
 
-  // X軸の tick 表示を条件分岐で制御する関数
   const tickFormatter = (value: string, index: number): string => {
     if (selectedPeriod === 'month') {
       if ((index + 1) % 7 === 0 || index === data.length - 1) {
@@ -122,83 +125,60 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, we
   };
 
   return (
-    <div className="w-full px-3">
-      {/* 期間選択ボタン */}
+    <div className="w-full">
       <div className="flex space-x-6 mb-4">
         <button
           onClick={() => setSelectedPeriod('week')}
-          className={`py-1 px-3 rounded-full transition-colors duration-200 ${
-            selectedPeriod === 'week' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
+          className={`py-1 px-3 rounded-full transition-colors duration-200 ${selectedPeriod === 'week' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'}`}
         >
           1週間
         </button>
         <button
           onClick={() => setSelectedPeriod('month')}
-          className={`py-1 px-3 rounded-full transition-colors duration-200 ${
-            selectedPeriod === 'month' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
+          className={`py-1 px-3 rounded-full transition-colors duration-200 ${selectedPeriod === 'month' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'}`}
         >
           1か月
         </button>
         <button
           onClick={() => setSelectedPeriod('half-year')}
-          className={`py-1 px-3 rounded-full transition-colors duration-200 ${
-            selectedPeriod === 'half-year' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
+          className={`py-1 px-3 rounded-full transition-colors duration-200 ${selectedPeriod === 'half-year' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'}`}
         >
           半年
         </button>
         <button
           onClick={() => setSelectedPeriod('year')}
-          className={`py-1 px-3 rounded-full transition-colors duration-200 ${
-            selectedPeriod === 'year' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'
-          }`}
+          className={`py-1 px-3 rounded-full transition-colors duration-200 ${selectedPeriod === 'year' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'}`}
         >
           1年
         </button>
       </div>
-      <h2 className="card-title text-xl font-bold mb-2 text-center">我慢したカロリー</h2>
-      <p className="card-subtitle mb-4 text-center">
+      <h2 className="card-title text-xl font-bold mb-2">我慢したカロリー</h2>
+      <p className="card-subtitle mb-4">
         {periodLabel}
         {displayedTotal}kcal
       </p>
-
-      {/* グラフ全体を relative コンテナでラップ */}
-      <div className="relative">
-        {/* 横スクロール可能なグラフ部分 */}
-        <div className="overflow-x-auto" ref={scrollContainerRef}>
+      <div className="flex">
+        <div className="flex-1 overflow-x-auto" ref={scrollContainerRef}>
           <div style={chartContainerStyle}>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={data}>
+              <BarChart data={data} margin={{ top: 20, right: 0, bottom: 20, left: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" tickFormatter={tickFormatter} tick={{ fill: '#aaa' }} />
+                <XAxis dataKey="day" tickFormatter={tickFormatter} />
                 <Tooltip />
                 <Bar dataKey="calorie" fill="#48bb78" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
-        {/* 絶対配置した Y 軸（グラフ内にオーバーレイ） */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            height: 300,
-            width: 70,
-            pointerEvents: 'none',
-          }}
-        >
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} margin={{ top: 20, right: -60, bottom: 45, left: 30 }}>
+        <div style={{ width: '5%' }} className="flex text-right">
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={data} margin={{ top: 30, right: 0, bottom: 30, left: 0 }}>
               <YAxis
                 orientation="right"
                 tickLine={false}
                 axisLine={false}
                 domain={[0, maxCalorie]}
-                tick={{ fill: '#333333', textAnchor: 'end' }}
-                dx={-10}
+                tick={{ fill: '#000', textAnchor: 'end' }}
               />
             </BarChart>
           </ResponsiveContainer>
