@@ -12,62 +12,130 @@ import {
 import './WeeklyCalorieCard.css';
 
 interface WeeklyCalorieCardProps {
-  weeklyCalories: number[]; // 日別の減量カロリー（例: [100, 200, 300, …]）
-  weeklyTotal: number;      // 週間合計カロリー
+  // 1日ごとのカロリー我慢量（1週間・1か月表示用：例として週は7日、月は30日分のデータ）
+  dailyCalories: number[];
+  // 1週間ごとのカロリー我慢量（半年表示用：例として26週間分の集計データ）
+  weeklyCalories: number[];
+  // 1か月ごとのカロリー我慢量（年間表示用：例として12ヶ月分の集計データ）
+  monthlyCalories: number[];
 }
 
+const formatDate = (date: Date): string => {
+  const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+  const dd = date.getDate().toString().padStart(2, '0');
+  return `${mm}/${dd}`;
+};
+
 const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({
+  dailyCalories,
   weeklyCalories,
-  weeklyTotal,
+  monthlyCalories,
 }) => {
   const today = new Date();
-  const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
 
-  // 選択された期間を管理する state（'week' | 'month' | 'half-year' | 'year'）
+  // 選択された期間：'week'（1週間）、'month'（1か月）、'half-year'（半年）、'year'（1年）
   const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'half-year' | 'year'>('week');
 
-  // 横スクロールするグラフ部分の ref
+  // 棒グラフ横スクロール用の ref
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // 日付ごとのラベルとカロリーを含むデータ配列を生成
-  const data = weeklyCalories.map((value, index) => {
-    const date = new Date(today);
-    date.setDate(today.getDate() - (weeklyCalories.length - 1 - index));
-    return {
-      day: daysOfWeek[date.getDay()],
-      calorie: value,
-    };
-  });
-
-  // y 軸の domain 用に最大値を算出
-  const maxCalorie = weeklyCalories.length > 0 ? Math.max(...weeklyCalories) : 0;
-
-  // 選択期間に応じた合計カロリーとラベルを計算
-  let displayedTotal: number;
-  let periodLabel: string;
+  // 各期間ごとにデータ（ラベルは全件「MM/DD」形式）を作成
+  let data: { day: string; calorie: number }[] = [];
   if (selectedPeriod === 'week') {
-    displayedTotal = weeklyTotal;
+    data = dailyCalories.map((value, index) => {
+      // 配列は過去から現在の順と仮定し、最新が today
+      const date = new Date(today);
+      date.setDate(today.getDate() - (dailyCalories.length - 1 - index));
+      return { day: formatDate(date), calorie: value };
+    });
+  } else if (selectedPeriod === 'month') {
+    data = dailyCalories.map((value, index) => {
+      const date = new Date(today);
+      date.setDate(today.getDate() - (dailyCalories.length - 1 - index));
+      return { day: formatDate(date), calorie: value };
+    });
+  } else if (selectedPeriod === 'half-year') {
+    data = weeklyCalories.map((value, index) => {
+      const date = new Date(today);
+      // 各週データ：最新の週を today とし、1 週＝7 日として算出
+      date.setDate(today.getDate() - ((weeklyCalories.length - 1 - index) * 7));
+      return { day: formatDate(date), calorie: value };
+    });
+  } else if (selectedPeriod === 'year') {
+    data = monthlyCalories.map((value, index) => {
+      const date = new Date(today);
+      // 最新の月を today の月として、過去の月は月単位でずらす
+      date.setMonth(today.getMonth() - (monthlyCalories.length - 1 - index));
+      return { day: formatDate(date), calorie: value };
+    });
+  }
+
+  // 表示合計値の算出（週間表示の場合は最新の7件のみを合算）
+  let displayedTotal = 0;
+  if (selectedPeriod === 'week') {
+    const weekData = data.slice(-7);
+    displayedTotal = weekData.reduce((sum, item) => sum + item.calorie, 0);
+  } else {
+    displayedTotal = data.reduce((sum, item) => sum + item.calorie, 0);
+  }
+
+  let periodLabel = '';
+  if (selectedPeriod === 'week') {
     periodLabel = "週間合計約";
   } else if (selectedPeriod === 'month') {
-    displayedTotal = weeklyTotal * 4; // 例：1か月は約4週間分
     periodLabel = "月間合計約";
   } else if (selectedPeriod === 'half-year') {
-    displayedTotal = weeklyTotal * 26; // 例：半年は約26週間分
     periodLabel = "半年合計約";
   } else {
-    displayedTotal = weeklyTotal * 52; // 例：1年は約52週間分
     periodLabel = "年間合計約";
   }
 
-  // 1データあたり12%の横幅になるよう、全体の幅を計算
-  const computedChartWidth = `${data.length * 14.75}%`;
+  // y 軸の上限値
+  const maxCalorie = data.length > 0 ? Math.max(...data.map(item => item.calorie)) : 0;
 
-  // 8件以上の場合、初期スクロール位置を右端に設定（最新データを表示）
+  // グラフ横幅を、データ件数に合わせて調整
+  const widthFactorMap: Record<typeof selectedPeriod, number> = {
+    week: 100 / 7,
+    month: 100 / data.length,        // データ件数は 30 日分など
+    'half-year': 100 / data.length,    // 例：26件の場合
+    year: 100 / 12,
+  };
+  const chartWidthNumber = data.length * widthFactorMap[selectedPeriod];
+  const computedChartWidth = chartWidthNumber < 100 ? '100%' : `${chartWidthNumber}%`;
+
+  // データ件数が少ない場合は右寄せのためのスタイル設定
+  const chartContainerStyle = {
+    minWidth: '100%',
+    width: computedChartWidth,
+    display: chartWidthNumber < 100 ? 'flex' : 'block',
+    justifyContent: chartWidthNumber < 100 ? 'flex-end' : undefined,
+  };
+
+  // データ件数が8件以上の場合、初期スクロール位置を右端に設定
   useEffect(() => {
-    if (weeklyCalories.length >= 8 && scrollContainerRef.current) {
+    if (data.length >= 8 && scrollContainerRef.current) {
       scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
     }
-  }, [weeklyCalories]);
+  }, [data]);
+
+  // X軸の tick 表示を条件分岐で制御する関数
+  const tickFormatter = (value: string, index: number): string => {
+    if (selectedPeriod === 'month') {
+      // 1か月表示は、データ件数が例として 30 件の場合、7日ごとに 1 つ表示
+      if ((index + 1) % 7 === 0 || index === data.length - 1) {
+        return value;
+      }
+      return "";
+    } else if (selectedPeriod === 'half-year') {
+      // 半年表示：weeklyCalories のデータ件数が例として26件の場合、約4週ごとに 1 つ表示
+      if ((index + 1) % 4 === 0 || index === data.length - 1) {
+        return value;
+      }
+      return "";
+    }
+    // week, year はすべて表示
+    return value;
+  };
 
   return (
     <div className="w-full">
@@ -111,34 +179,25 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({
         {periodLabel}{displayedTotal}kcal
       </p>
 
-      {/* グラフと y 軸を横並びにする */}
+      {/* グラフと Y 軸を横並びに */}
       <div className="flex">
         {/* 横スクロール可能なグラフ部分 */}
-        <div
-          className="flex-1 overflow-x-auto"
-          ref={scrollContainerRef}
-        >
-          <div style={{ width: computedChartWidth }}>
+        <div className="flex-1 overflow-x-auto" ref={scrollContainerRef}>
+          <div style={chartContainerStyle}>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={data}
-                margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-              >
+              <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
+                <XAxis dataKey="day" tickFormatter={tickFormatter} />
                 <Tooltip />
                 <Bar dataKey="calorie" fill="#48bb78" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
-        {/* 数字の表示コンテナ（y 軸部分）の幅を横幅の15%に設定 */}
+        {/* Y 軸部分（横幅約13%） */}
         <div style={{ width: "13%" }}>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              data={data}
-              margin={{ top: 30, right: 0, bottom: 30, left: 0 }}
-            >
+            <BarChart data={data} margin={{ top: 30, right: 0, bottom: 30, left: 0 }}>
               <YAxis
                 orientation="right"
                 tickLine={false}
