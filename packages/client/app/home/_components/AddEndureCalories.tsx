@@ -8,25 +8,28 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerFooter,
-  DrawerClose,
   DrawerDescription,
 } from 'app/components/ui/drawer';
-import { Button } from 'app/components/ui/button';
 import InputForm from 'app/components/InputForm';
 
-const AddEndureCalories = () => {
+interface AddEndureCaloriesProps {
+  onSubmit: (food: string) => Promise<void>;
+}
+
+const AddEndureCalories = (props: AddEndureCaloriesProps) => {
   const [open, setOpen] = useState(false);
   const [inputText, setInputText] = useState('');
 
   // 例としてのサンプル例。必要に応じて変更してください。
   const examples = ['カップラーメン', 'ポテトチップス', 'コーラ'];
 
-  // 送信処理(そのうちカスタムフックに移動)
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!inputText.trim()) return;
-    console.log('送信:', inputText);
-    // ここでバックエンドへの送信処理を実装するなど
+
+    // 親コンポーネントに入力を渡す
+    await props.onSubmit(inputText);
+
+    // 入力を空にする
     setInputText('');
   };
 
@@ -45,7 +48,7 @@ const AddEndureCalories = () => {
           <NotebookPen className="h-6 w-6" />
         </button>
       </DrawerTrigger>
-      <DrawerContent className='pb-20'>
+      <DrawerContent className="pb-20">
         <DrawerHeader>
           <DrawerTitle>我慢カロリー記入フォーム</DrawerTitle>
           <DrawerDescription>我慢できた食品を記入して下さい！</DrawerDescription>
