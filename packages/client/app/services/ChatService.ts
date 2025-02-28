@@ -7,30 +7,23 @@ export type ChatLog = {
   isAI: boolean;
 };
 
+type GetChatLogResponse = {
+  chatLogs: ChatLog[];
+};
+
 export default class ChatService {
   private static readonly baseUrl = `${process.env.NEXT_PUBLIC_API_ENDPOINT_URL}/chat`;
 
   public static async GetUserChatLog(clientId: string, maxtake: number = 50): Promise<ChatLog[]> {
     const url = `${this.baseUrl}/get-chat-log/${maxtake}`;
     const body = { clientId } as UserClientIdRequest;
-    const response = await axios.post<ChatLog[]>(url, body);
+    const response = await axios.post<GetChatLogResponse>(url, body);
 
     if (response.status !== 200) {
       throw new Error('ChatService:GetUserChatLog: status is not 200');
     }
 
-    const chatLogs = response.data.map((chatLog) => {
-      return {
-        message: chatLog.message,
-        isAI: chatLog.isAI,
-      } as ChatLog;
-    });
-
-    if (chatLogs == null || chatLogs.length === 0) {
-      throw new Error('ChatService:GetUserChatLog: chatLogs is empty');
-    }
-
-    return chatLogs;
+    return response.data.chatLogs;
   }
 
   public static async SendPersuadeAI(clientId: string, message: string): Promise<string> {
