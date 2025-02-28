@@ -83,7 +83,7 @@ export default class DailyPatienceCalorieController {
         // ユーザーの総我慢カロリーを更新
         await this.userService.UpdateUserTotalPatienceCalories(clientId, calories);
         // 褒め言葉を生成
-        message = await this.openAIService.PraiseCaloriePatience(calories);
+        message = await this.openAIService.PraiseFoodPatience(food);
       }
 
       return response.status(200).send({ calories, message });
