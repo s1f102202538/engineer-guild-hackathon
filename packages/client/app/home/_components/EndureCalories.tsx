@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { DailyPatienceCaloriesContext } from '../page';
+import { DailyPatienceCaloriesContext } from '../_contexts/HomeContext';
 
 const EndureCalories = () => {
   const dailyPatienceCalories = useContext(DailyPatienceCaloriesContext);

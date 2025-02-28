@@ -2,7 +2,7 @@
 
 import { Eye, EyeClosed } from 'lucide-react';
 import React, { useContext, useState } from 'react';
-import { UserDataContext } from 'app/home/page';
+import { UserDataContext } from '../_contexts/HomeContext';
 
 const CheckWeight = () => {
   const [isCheckWeight, setIsCheckWeight] = useState<boolean>(true);
