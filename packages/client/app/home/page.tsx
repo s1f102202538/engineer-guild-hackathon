@@ -4,7 +4,7 @@ import React from 'react';
 import { UserData } from 'app/services/UserService';
 import UserService from 'app/services/UserService';
 import DailyPatienceCalorieService from 'app/services/DailyPatienceCalorieService';
-import { createContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useClientId from 'app/hooks/useClientId';
 import EndureCalories from './_components/EndureCalories';
@@ -14,10 +14,7 @@ import Comment from './_components/Comment';
 import AddEndureCalories from './_components/AddEndureCalories';
 import Header from '../components/Header';
 import Tutorial from 'app/components/Tutorial';
-
-export const UserDataContext = createContext<UserData | null>(null);
-export const DailyPatienceCaloriesContext = createContext<number>(0);
-export const CommentContext = createContext<string>('');
+import { CommentContext, DailyPatienceCaloriesContext, UserDataContext } from './_contexts/HomeContext';
 
 const Page = () => {
   const clientId = useClientId();

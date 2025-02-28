@@ -1,8 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useContext } from 'react';
-import { CommentContext } from '../page';
-import { UserDataContext } from '../page';
+import { CommentContext, UserDataContext } from '../_contexts/HomeContext';
 
 const Comment = () => {
   const comment = useContext(CommentContext);
