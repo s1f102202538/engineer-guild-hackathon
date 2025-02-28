@@ -1,7 +1,7 @@
 'use client';
-
 import React, { useState } from 'react';
-import { NotebookPen } from 'lucide-react';
+import { NotebookPen, CheckCircle } from 'lucide-react';
+import { toast, Toaster } from 'sonner';
 import {
   Drawer,
   DrawerTrigger,
@@ -21,20 +21,39 @@ const AddEndureCalories = (props: AddEndureCaloriesProps) => {
   const [inputText, setInputText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 例としてのサンプル例。必要に応じて変更してください。
   const examples = ['カップラーメン', 'ポテトチップス', 'コーラ'];
 
   const handleSubmit = async () => {
     if (!inputText.trim() || isSubmitting) return;
 
     try {
+      // Drawer を閉じる
+      setOpen(false);
       setIsSubmitting(true);
+      // ローディングトースト表示
+      const loadingToast = toast.loading('送信中...', {
+        duration: Number.POSITIVE_INFINITY,
+      });
 
       // 親コンポーネントに入力を渡す
       await props.onSubmit(inputText);
 
+      // ローディングトーストを閉じ、成功トースト表示
+      toast.dismiss(loadingToast);
+      toast.success('送信が完了しました！', {
+        style: {
+          background: '#ecfdf5',
+          border: '1px solid #6ee7b7',
+          color: '#065f46',
+        },
+        icon: <CheckCircle className="h-5 w-5 text-green-600" />,
+      });
+
+      // Drawer を閉じる
+      setOpen(false);
       setInputText('');
     } catch (error) {
+      toast.error('エラーが発生しました。もう一度お試しください。');
       console.error('Failed to submit:', error);
     } finally {
       setIsSubmitting(false);
@@ -50,6 +69,8 @@ const AddEndureCalories = (props: AddEndureCaloriesProps) => {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
+      {/* トップにToast*/}
+      <Toaster position="top-center" />
       {/* トリガー */}
       <DrawerTrigger asChild>
         <button

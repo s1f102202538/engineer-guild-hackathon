@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye, EyeClosed } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import React, { useContext, useState } from 'react';
 import { UserDataContext } from 'app/home/page';
 
@@ -37,7 +37,7 @@ const CheckWeight = () => {
         {isCheckWeight ? (
           <Eye className="cursor-pointer" onClick={() => setIsCheckWeight((prev) => !prev)} />
         ) : (
-          <EyeClosed className="cursor-pointer" onClick={() => setIsCheckWeight((prev) => !prev)} />
+          <EyeOff className="cursor-pointer" onClick={() => setIsCheckWeight((prev) => !prev)} />
         )}
       </div>
     </div>

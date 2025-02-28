@@ -146,7 +146,7 @@ const WeeklyCalorieCard: React.FC<WeeklyCalorieCardProps> = ({ dailyCalories, we
       {/* 期間選択タブ */}
       <Tabs
         defaultValue="week"
-        onValueChange={(value) => setSelectedPeriod(value as 'week' | 'month' | 'half-year' | 'year')}
+        onValueChange={(value: 'week' | 'month' | 'half-year' | 'year') => setSelectedPeriod(value)}
       >
         <TabsList className="flex space-x-6 my-4 justify-center">
           <TabsTrigger value="week">1週間</TabsTrigger>

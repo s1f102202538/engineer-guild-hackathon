@@ -58,8 +58,10 @@ const Page = () => {
 
   const uploadEndureFood = async (food: string) => {
     const response = await DailyPatienceCalorieService.UploadFood(clientId, food);
-
-    setComment(response.message);
+    setTimeout(() => {
+      console.log('3秒経過');
+      setComment(response.message);
+    }, 900);
   };
 
   const onUplodaEndureFood = async (food: string) => {
