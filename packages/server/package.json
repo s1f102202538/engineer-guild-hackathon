@@ -5,6 +5,9 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "build": "tsc",
+    "start": "NODE_ENV=production yarn run prisma:generate && node dist/index.js",
+    "start:dev": "NODE_ENV=development yarn run prisma:generate && nodemon dist/index.js",
     "dev": "NODE_ENV=development yarn run prisma:generate && nodemon --exec ts-node src/index.ts",
     "prisma:generate": "prisma generate --schema src/prisma/schema.prisma",
     "prisma:db:push": "prisma db push --schema src/prisma/schema.prisma"
